@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+{% block content %}
+{% set iterated = {'i': False} %}
+<h1>Trips By {{ trips.username }}, {{ trips.total }}</h1><hr>
+
+    {% for trip in trips.items %}
+    <article>
+        <h2>Izlet u {{ trip.location }}</h2>
+        <div>
+            <img src="{{ url_for('static', filename='profile_pics/' + trip.users[0].image_file) }}">
+            <p>Autor : </p><a href="#">{{ trip.users[0].username }}</a>
+            <p>Datum stvarnja : {{ trip.date_created.strftime('%Y-%m-%d') }}</p>
+            <p>Vrsta transporta : {{ trip.transport }}</p>
+            <p>Slobodnih mjesta : {{ trip.spaces_available }}</p>
+            <p>Polazak (yy-mm-dd hh:mm:ss) : {{ trip.start_date }}</p>
+            <p>Cijena izleta (kuna) : {{ trip.price }}</p>
+
+            <p>Trajanje izleta (dana) : {{ trip.trip_duration }}</p>
+            <p>Detalji :</p>
+            <article>{{ trip.details }}</article>
+            <br><br>
+            <p>Prijavljeni su : </p>
+            {% set iterated = {'i': False} %}
+            {% for user in trip.users %}
+               {% if user.username==current_user.username  %}
+                <div hidden>{{ iterated.update({'i':True}) }}</div>
+                {% endif %}
+            <p>{{ user.username }}</p>
+            {% endfor %}
+            <br><br>
+            <hr>
+            <p>curent user{{current_user}}</p>
+            <p>user 0 {{trip.users[0]}}</p>
+            <hr>
+            {% if current_user.is_authenticated %}
+                {% if current_user == trip.users[0] %}
+                <p><i>Vi ste autor putovanja.</i></p>
+                <a href="{{ url_for('show_trip', trip=trip.id) }}">Izmjeni/izbrisi izlet</a>
+
+                {% elif not iterated.i %}
+                <a href="{{ url_for('add_traveler', trip=trip.id) }}">Prijavi se!</a>
+                {% elif  iterated.i %}
+                <p><i>Prijavljeni ste na ovaj izlet!</i><br>
+                    <a href="{{ url_for('remove_traveler', trip=trip.id) }}">Odjavi se</a></p>
+                {% endif %}
+
+            {% else %}
+                <small>Zelite se prijaviti na izlet? <a href="{{ url_for('login') }}">Login</a></small>
+            {% endif %}
+            <hr>
+            </div>
+        </article>
+
+
+    {% endfor %}
+
+{% endblock content %}
+

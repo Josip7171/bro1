@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>TRAVELERS PAGE</h1><hr>
+    {% for user in users %}
+        <p><a href="#">{{ user.username }}</a></p>
+    {% endfor %}
+{% endblock content %}
