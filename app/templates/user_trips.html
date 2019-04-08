@@ -4,10 +4,10 @@
 <h1>Trips By {{ user.username }} ({{ trips.total }})</h1><hr>
     {% for trip in trips.items %}
     <article>
-        <a href="{{ url_for('show_trip', trip_id=trip.id) }}"><h2>Izlet u {{ trip.location }}</h2></a>
+        <a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}"><h2>Izlet u {{ trip.location }}</h2></a>
         <div>
             <img src="{{ url_for('static', filename='profile_pics/' + trip.author.image_file) }}">
-            <p>Autor : <a href="{{ url_for('user_trips', id=trip.author.id) }}">{{ trip.author.username }}</a></p>
+            <p>Autor : <a href="{{ url_for('users.user_trips', id=trip.author.id) }}">{{ trip.author.username }}</a></p>
             <p>Datum stvarnja : {{ trip.date_created.strftime('%Y-%m-%d') }}</p>
             <p>Detalji :</p>
             <article>{{ trip.details }}</article>
@@ -27,18 +27,18 @@
             {% if current_user.is_authenticated %}
                 {% if current_user.username == trip.author.username %}
                 <p><i>Vi ste autor putovanja.</i></p>
-                <a href="{{ url_for('show_trip', trip_id=trip.id) }}">Izmjeni/izbrisi izlet</a><br>
+                <a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}">Izmjeni/izbrisi izlet</a><br>
                 {% endif %}
 
                 {% if not iterated.i %}
-                <a href="{{ url_for('add_traveler', trip_id=trip.id) }}">Prijavi se!</a>
+                <a href="{{ url_for('users.add_traveler', trip_id=trip.id) }}">Prijavi se!</a>
                 {% elif  iterated.i %}
                 <p><i>Prijavljeni ste na ovaj izlet!</i><br>
-                    <a href="{{ url_for('remove_traveler', trip_id=trip.id) }}">Odjavi se</a></p>
+                    <a href="{{ url_for('users.remove_traveler', trip_id=trip.id) }}">Odjavi se</a></p>
                 {% endif %}
 
             {% else %}
-                <small>Zelite se prijaviti na izlet? <a href="{{ url_for('login') }}">Login</a></small>
+                <small>Zelite se prijaviti na izlet? <a href="{{ url_for('users.login') }}">Login</a></small>
             {% endif %}
             <hr><hr>
             </div>
@@ -50,9 +50,9 @@
     {% for page_num in trips.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
         {% if page_num %}
             {% if trips.page ==page_num %}
-                <a style="color:green" href="{{ url_for('user_trips', id=user.id, page=page_num) }}">{{ page_num }}</a>
+                <a style="color:green" href="{{ url_for('users.user_trips', id=user.id, page=page_num) }}">{{ page_num }}</a>
             {% else %}
-                <a href="{{ url_for('user_trips', id=user.id, page=page_num) }}">{{ page_num }}</a>
+                <a href="{{ url_for('users.user_trips', id=user.id, page=page_num) }}">{{ page_num }}</a>
             {% endif %}
         {% else %}
         ...

@@ -54,16 +54,16 @@
 <body>
 
     <header>
-        <a href="{{ url_for('home') }}">Home</a>
-        <a href="{{ url_for('about') }}">About</a>
-        <a href="{{ url_for('travelers') }}">Travelers</a>
+        <a href="{{ url_for('main.home') }}">Home</a>
+        <a href="{{ url_for('main.about') }}">About</a>
+        <a href="{{ url_for('users.travelers') }}">Travelers</a>
         {% if current_user.is_authenticated %}
-        <a href="{{ url_for('new_trip') }}">New Trip</a>
-        <a href="{{ url_for('account') }}">Account</a>
-        <a href="{{ url_for('logout') }}">Logout</a>
+        <a href="{{ url_for('trips.new_trip') }}">New Trip</a>
+        <a href="{{ url_for('users.account') }}">Account</a>
+        <a href="{{ url_for('users.logout') }}">Logout</a>
         {% else %}
-        <a href="{{ url_for('register') }}">Register</a>
-        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('users.register') }}">Register</a>
+        <a href="{{ url_for('users.login') }}">Login</a>
         {% endif %}
     </header>
 

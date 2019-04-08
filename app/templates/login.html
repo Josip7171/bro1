@@ -36,14 +36,14 @@
                 {{ form.submit }}
             </div>
         <small>
-            <a href="{{ url_for('reset_request') }}">Forgot password?</a>
+            <a href="{{ url_for('users.reset_request') }}">Forgot password?</a>
         </small>
         </form>
     </div>
     <div>
         <small>
             Need an Account?
-            <a href="{{ url_for('register') }}">Register</a>
+            <a href="{{ url_for('users.register') }}">Register</a>
         </small>
     </div>
 {% endblock content %}
