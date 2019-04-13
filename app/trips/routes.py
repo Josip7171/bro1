@@ -3,8 +3,9 @@ from flask import render_template, url_for, flash, redirect, request, abort
 from flask_login import current_user, login_required
 
 from app import db
-from app.models import Trip
+from app.models import Trip, User
 from app.trips.forms import CreateTripForm
+from app.users.utils import save_picture_trip
 
 trips = Blueprint('trips', __name__)
 
@@ -13,46 +14,74 @@ trips = Blueprint('trips', __name__)
 @login_required
 def new_trip():
     form = CreateTripForm()
+
     if form.validate_on_submit():
-        trip = Trip(location=form.location.data, user_id=current_user.id, details=form.details.data)
+        picture_file = 'trip_default.jpg'
+        if form.trip_picture.data:
+            picture_file = save_picture_trip(form.trip_picture.data)
+            print("success")
+        trip = Trip(location=form.location.data, user_id=current_user.id, price=form.price.data,
+                    people_number=form.people_number.data, starting_at=form.starting_at.data,
+                    transport_type=form.transport_type.data, trip_duration=form.trip_duration.data,
+                    details=form.details.data, image_file=picture_file)
+
         db.session.add(trip)
         db.session.commit()
+
         flash('Your post has been created!', 'success')
         return redirect(url_for('main.home'))
+
+    else:
+        flash('Trip not created! Please check your input.', 'danger')
+
     return render_template('new_trip.html', form=form, title='New Trip')
 
 
 @trips.route("/show_trip/<int:trip_id>")
 def show_trip(trip_id):
     selected_trip = Trip.query.get_or_404(trip_id)
-    return render_template('show_trip.html', title=selected_trip.location, trip=selected_trip)
+    mydict = {}
+    users = User.query.filter(User.trips_joined.any(id=trip_id)).all()
+    mydict[trip_id] = [x.username for x in users]
+    return render_template('show_trip.html', title=selected_trip.location, trip=selected_trip, mydict=mydict,
+                           users=users)
 
 
 @trips.route("/update/<int:trip>", methods=["POST", "GET"])
 @login_required
 def update_trip(trip):
     selected_trip = Trip.query.get_or_404(trip)
+
     if selected_trip.author != current_user:
         abort(403)
+
     form = CreateTripForm()
+
     if form.validate_on_submit():
+        if form.trip_picture.data:
+            picture_file = save_picture_trip(form.trip_picture.data)
+            selected_trip.image_file = picture_file
+
         selected_trip.location = form.location.data
-        # selected_trip.transport = form.transport.data
-        # selected_trip.spaces_available = form.spaces.data
-        # selected_trip.start_date = form.start_date.data
-        # selected_trip.price = form.price.data
-        # selected_trip.trip_duration = form.trip_duration.data
+        selected_trip.price = form.price.data
+        selected_trip.people_number = form.people_number.data
+        selected_trip.starting_at = form.starting_at.data
+        selected_trip.transport_type = form.transport_type.data
+        selected_trip.trip_duration = form.trip_duration.data
         selected_trip.details = form.details.data
+
         db.session.commit()
-        flash('Vas trip je update-an!')
+
+        flash('Vas trip je ažuriran!')
         return redirect(url_for('main.home', trip=selected_trip.id))
+
     elif request.method == 'GET':
         form.location.data = selected_trip.location
-        # form.transport.data = selected_trip.transport
-        # form.spaces.data = selected_trip.spaces_available
-        # form.start_date.data = selected_trip.start_date
-        # form.price.data = selected_trip.price
-        # form.trip_duration.data = selected_trip.trip_duration
+        form.price.data = selected_trip.price
+        form.people_number.data = selected_trip.people_number
+        form.starting_at.data = selected_trip.starting_at
+        form.transport_type.data = selected_trip.transport_type
+        form.trip_duration.data = selected_trip.trip_duration
         form.details.data = selected_trip.details
 
     return render_template('new_trip.html', title='Update Trip', form=form,
@@ -67,7 +96,7 @@ def delete_trip(trip):
         abort(403)
     db.session.delete(selected_trip)
     db.session.commit()
-    flash(f'>Izbrisali ste vas izlet!')
+    flash(f'>Izbrisali ste vaš izlet!')
     return redirect(url_for('main.home'))
 
 

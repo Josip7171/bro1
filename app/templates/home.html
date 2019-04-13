@@ -1,51 +1,121 @@
 {% extends "layout.html" %}
 {% block content %}
-            {% set iterated = {'i': False} %}
-<h1>LIST OF TRIPS</h1><hr>
-    {% for trip in trips.items %}
-    <article>
-        <a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}"><h2>Izlet u {{ trip.location }}</h2></a>
-        <div>
-            <img src="{{ url_for('static', filename='profile_pics/' + trip.author.image_file) }}">
-            <p>Autor : <a href="{{ url_for('users.user_trips', id=trip.author.id) }}">{{ trip.author.username }}</a></p>
-            <p>Datum stvarnja : {{ trip.date_created.strftime('%Y-%m-%d') }}</p>
-            <p>Detalji :</p>
-            <article>{{ trip.details }}</article>
-            <br><br>
+    {% set iterated = {'i': False} %}
+    {% set count = namespace(a=0) %}
+    {% set count2 = namespace(a=dict_length) %}
+    {% set checker = namespace(a=0) %}
+    {%  set users_joined = {} %}
 
-            <p>Prijavljeni su : </p>
-            {% set iterated = {'i': False} %}
-            {% for trip_joined in current_user.trips_joined %}
-               {% if trip.id==trip_joined.id  %}
-                <div hidden>{{ iterated.update({'i':True}) }}</div>
-                <p>{{ current_user.username }}</p>
-                {% endif %}
-            {% endfor %}
-            <br><br>
-            <hr>
-
-            {% if current_user.is_authenticated %}
-                {% if current_user.username == trip.author.username %}
-                <p><i>Vi ste autor putovanja.</i></p>
-                <a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}">Izmjeni/izbrisi izlet</a><br>
-                {% endif %}
-
-                {% if not iterated.i %}
-                <a href="{{ url_for('users.add_traveler', trip_id=trip.id) }}">Prijavi se!</a>
-                {% elif  iterated.i %}
-                <p><i>Prijavljeni ste na ovaj izlet!</i><br>
-                    <a href="{{ url_for('users.remove_traveler', trip_id=trip.id) }}">Odjavi se</a></p>
-                {% endif %}
-
-            {% else %}
-                <small>Zelite se prijaviti na izlet? <a href="{{ url_for('users.login') }}">Login</a></small>
-            {% endif %}
-            <hr><hr>
+    <section class="jumbotron text-center">
+            <div class="container">
+              {% if current_user.is_authenticated %}
+                 <h1 class="jumbotron-heading">Pozdrav, {{ current_user.username }}</h1>
+              {% else %}
+                 <h1 class="jumbotron-heading">Pozdrav, Goste</h1>
+              {% endif %}
+              <p class="lead text-muted">Trippin je zajednica ljudi koji vole putovati i organizirati svoje vlastite izlete. Na ovoj stranici možete naći aktualne izlete.</p>
+              {% if current_user.is_authenticated %}
+              <p>
+                  <a href="{{ url_for('trips.new_trip') }}" class="btn btn-primary my-2">Novi Izlet</a>
+                  <a href="{{ url_for('users.account') }}" class="btn btn-secondary my-2">Profile</a>
+                  <a href="{{ url_for('users.logout') }}" class="btn btn-secondary my-2">Logout</a>
+              </p>
+              {% else %}
+              <p>
+                <a href="{{ url_for('users.login') }}" class="btn btn-primary my-2">Login</a>
+                <a href="{{ url_for('users.register') }}" class="btn btn-secondary my-2">Register</a>
+              </p>
+              {% endif %}
             </div>
-        </article>
+          </section>
+
+    <main role="main">
+       <div class="album py-5 bg-light">
+          <div class="container">
+            <div class="row">
 
 
+    {% for trip in trips.items %}
+
+    {%  if trips.page == 0 %}
+        {% set checker = namespace(a=0) %}
+    {% else %}
+        {% set checker = namespace(a=1) %}
+    {% endif %}
+
+                <div class="col-md-4">
+                  <div class="card mb-4 shadow-sm">
+                   <img alt="" src="{{ url_for('static', filename='trip_pics/' + trip.image_file) }}">
+                    <div class="card-body">
+                        <h2><a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}"><h2>Izlet: {{ trip.location }}</h2></a></h2>
+                      <p class="card-text">Autor: <a href="{{ url_for('users.user_trips', id=trip.author.id) }}">{{ trip.author.username }}</a></p>
+                      <p class="card-text">Cijena: {{ trip.price }} kuna</p>
+                      <p class="card-text">Trajanje: {{ trip.trip_duration }} dana</p>
+                      <p class="card-text">Početak: {{ trip.starting_at }}</p>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            {% if current_user.is_authenticated %}
+                                {% if current_user.username == trip.author.username %}
+                                    <a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}" class="btn btn-primary my-2">Edit</a><br>
+                                {% endif %}
+
+                                {% set iterated = {'i': False} %}
+                                {% for trip_joined in current_user.trips_joined %}
+                                   {% if trip.id==trip_joined.id  %}
+                                     <div hidden>{{ iterated.update({'i':True}) }}</div>
+                                   {% endif %}
+                                {% endfor %}
+
+                                {% if not iterated.i %}
+                                    <a href="{{ url_for('users.add_traveler', trip_id=trip.id) }}" class="btn btn-primary my-2">Prijavi se</a>
+                                {% elif  iterated.i %}
+                                    <a href="{{ url_for('users.remove_traveler', trip_id=trip.id) }}" class="btn btn-warning my-2">Odjavi se</a>
+                                {% endif %}
+                            {% else %}
+                                <a href="{{ url_for('users.login') }}" class="btn btn-primary my-2">Login</a>
+                            {% endif %}
+
+                            {% set count = namespace(a=0) %}
+                            {% for user_joined in trip.users %}
+                                {% set count.a = count.a + 1 %}
+                            {% endfor %}
+
+{#                            <a id="myBtn" class="btn btn-info my-2" onclick="test1({{ count2.a - ((trips.page) * 5) }}, {{ mydict }})" role="button">{{ count.a }}</a>#}
+                            <a id="myBtn" class="btn btn-info my-2" onclick="test1({{ count2.a - checker.a - ((trips.page - 1) * 5) }}, {{ mydict }})" role="button">{{ count.a }} / {{ trip.people_number }}</a>
+
+                            <!-- The Modal -->
+                            <div id="myModal" class="modal">
+
+                              <!-- Modal content -->
+                              <div class="modal-content">
+                                <span class="close">&times;</span>
+                                  <hr>
+                                  <h3><b>Prijavljeni korisnici:</b></h3>
+                                  <br>
+                                <p id="p1">Some text in the Modal..</p>
+                                  <hr>
+{#                                <p id="p2">Some text in the Modal..</p>#}
+                              </div>
+
+                            </div>
+
+
+                        </div>
+                        <small class="text-muted">{{ trip.date_created.strftime('%Y-%m-%d') }}</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+        {% set count2.a = count2.a - 1 %}
     {% endfor %}
+
+            </div>
+          </div>
+       </div>
+    </main>
+
     <small>Currently on {{ trips.page }}. page</small><br>
     {% for page_num in trips.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
         {% if page_num %}
@@ -58,5 +128,36 @@
         ...
         {% endif %}
     {% endfor %}
+
+
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById('myModal');
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        function test1(trip_number, mydict) {
+          modal.style.display = "block";
+          document.getElementById("p1").innerText = mydict[trip_number + 1];
+          // document.getElementById("p2").innerText = trip_number;
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+    </script>
+
+
+
 {% endblock content %}
 

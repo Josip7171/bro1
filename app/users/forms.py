@@ -1,14 +1,24 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, ValidationError
+from wtforms import (StringField, PasswordField, SubmitField, BooleanField,
+                     ValidationError, RadioField, DateField, TextAreaField)
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from app.models import User
 
 
 class RegistrationForm(FlaskForm):
+    first_name = StringField('First Name', validators=[DataRequired(), Length(min=2,max=25)])
+    last_name = StringField('Last Name', validators=[DataRequired(), Length(min=2,max=25)])
+    full_name = StringField('Full Name', validators=[DataRequired(), Length(min=2,max=51)])
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
+    address = StringField('Address', validators=[Length(min=3, max=60)])
+    country = StringField('Country', validators=[Length(min=3, max=30)])
+    phone_number = StringField('Phone number', validators=[Length(min=8, max=25)])
+    gender = RadioField('Spol', choices=[('male', 'musko'), ('female', 'zensko')])
+    birth_date = DateField('Birth date', format='%d-%m-%Y')
+    about_me = StringField('About me', validators=[Length(min=2, max=120)])
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(),
                                                                      EqualTo('password')])
@@ -35,8 +45,11 @@ class LoginForm(FlaskForm):
 class UpdateAccountForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
+    address = StringField('Address', validators=[Length(min=3, max=60)])
+    country = StringField('Country', validators=[Length(min=3, max=30)])
+    phone_number = StringField('Phone number', validators=[Length(min=8, max=25)])
+    about_me = TextAreaField('About me', validators=[Length(min=2, max=120)])
     picture = FileField('Update profile picture', validators=[FileAllowed(['jpg', 'png'])])
-
     submit = SubmitField('Update')
 
     def validate_username(self, username):

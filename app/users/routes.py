@@ -19,7 +19,11 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        user = User(first_name=form.first_name.data, last_name=form.last_name.data,
+                    full_name=form.full_name.data,username=form.username.data, email=form.email.data,
+                    address=form.address.data, country=form.country.data, phone_number=form.phone_number.data,
+                    gender=form.gender.data, birth_date=form.birth_date.data, about_me=form.about_me.data,
+                    password=hashed_password, )
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created. You can now login.', 'success')
@@ -57,17 +61,26 @@ def logout():
 def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
+        print("---------------------------ALOoo-------------", form.picture.data)
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
             current_user.image_file = picture_file
         current_user.username = form.username.data
         current_user.email = form.email.data
+        current_user.address = form.address.data
+        current_user.country = form.country.data
+        current_user.phone_number = form.phone_number.data
+        current_user.about_me = form.about_me.data
         db.session.commit()
         flash('Your account has been updated.', 'success')
         return redirect(url_for('users.account'))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
+        form.address.data = current_user.address
+        form.country.data = current_user.country
+        form.phone_number.data = current_user.phone_number
+        form.about_me.data = current_user.about_me
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('account.html', form=form, image_file=image_file)
 
@@ -115,6 +128,12 @@ def reset_token(token):
 @login_required
 def add_traveler(trip_id):
     selected_trip = Trip.query.get_or_404(trip_id)
+    count = 0
+    for user in selected_trip.users:
+        count+=1
+    if count == selected_trip.people_number:
+        flash("Not enough space in trip! Try again later.")
+        return redirect(url_for('main.home'))
     current_user.trips_joined.append(selected_trip)
     db.session.add(current_user)
     db.session.commit()

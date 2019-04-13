@@ -2,7 +2,7 @@
 {% block content %}
     <h1>{{ legend }}</h1><hr>
     <div>
-        <form method="POST" action="">
+        <form method="POST" action="" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <fieldset>
                 <legend>{{ legend }}</legend>
@@ -19,71 +19,71 @@
                         {{ form.location }}
                     {% endif %}
                 </div>
-{#                <div>#}
-{#                    {{ form.transport.label }}#}
-{#                    {% if form.transport.errors %}#}
-{#                        {{ form.transport }}#}
-{#                        <div>#}
-{#                            {% for error in form.transport.errors %}#}
-{#                                <span>{{ error }}</span>#}
-{#                            {% endfor %}#}
-{#                        </div>#}
-{#                    {% else %}#}
-{#                        {{ form.transport }}#}
-{#                    {% endif %}#}
-{#                </div>#}
-{#                <div>#}
-{#                    {{ form.spaces.label }}#}
-{#                    {% if form.spaces.errors %}#}
-{#                        {{ form.spaces }}#}
-{#                        <div>#}
-{#                            {% for error in form.spaces.errors %}#}
-{#                                <span>{{ error }}</span>#}
-{#                            {% endfor %}#}
-{#                        </div>#}
-{#                    {% else %}#}
-{#                        {{ form.spaces }}#}
-{#                    {% endif %}#}
-{#                </div>#}
-{#                <div>#}
-{#                    {{ form.start_date.label }}#}
-{#                    {% if form.start_date.errors %}#}
-{#                        {{ form.start_date }}#}
-{#                        <div>#}
-{#                            {% for error in form.start_date.errors %}#}
-{#                                <span>{{ error }}</span>#}
-{#                            {% endfor %}#}
-{#                        </div>#}
-{#                    {% else %}#}
-{#                        {{ form.start_date }}#}
-{#                    {% endif %}#}
-{#                </div>#}
-{#                <div>#}
-{#                    {{ form.price.label }}#}
-{#                    {% if form.price.errors %}#}
-{#                        {{ form.price }}#}
-{#                        <div>#}
-{#                            {% for error in form.price.errors %}#}
-{#                                <span>{{ error }}</span>#}
-{#                            {% endfor %}#}
-{#                        </div>#}
-{#                    {% else %}#}
-{#                        {{ form.price }}#}
-{#                    {% endif %}#}
-{#                </div>#}
-{#                <div>#}
-{#                    {{ form.trip_duration.label }}#}
-{#                    {% if form.trip_duration.errors %}#}
-{#                        {{ form.trip_duration }}#}
-{#                        <div>#}
-{#                            {% for error in form.trip_duration.errors %}#}
-{#                                <span>{{ error }}</span>#}
-{#                            {% endfor %}#}
-{#                        </div>#}
-{#                    {% else %}#}
-{#                        {{ form.trip_duration }}#}
-{#                    {% endif %}#}
-{#                </div>#}
+                <div>
+                    {{ form.price.label }}
+                    {% if form.price.errors %}
+                        {{ form.price }}
+                        <div>
+                            {% for error in form.price.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.price }}
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.people_number.label }}
+                    {% if form.people_number.errors %}
+                        {{ form.people_number }}
+                        <div>
+                            {% for error in form.people_number.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.people_number }}
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.starting_at.label }}
+                    {% if form.starting_at.errors %}
+                        {{ form.starting_at }}
+                        <div>
+                            {% for error in form.starting_at.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.starting_at }}
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.transport_type.label }}
+                    {% if form.transport_type.errors %}
+                        {{ form.transport_type }}
+                        <div>
+                            {% for error in form.transport_type.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.transport_type }}
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.trip_duration.label }}
+                    {% if form.trip_duration.errors %}
+                        {{ form.trip_duration }}
+                        <div>
+                            {% for error in form.trip_duration.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.trip_duration }}
+                    {% endif %}
+                </div>
                 <div>
                     {{ form.details.label }}
                     {% if form.details.errors %}
@@ -95,6 +95,15 @@
                         </div>
                     {% else %}
                         {{ form.details }}
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.trip_picture.label }}
+                    {{ form.trip_picture(class="") }}
+                    {% if form.trip_picture.errors %}
+                        {% for error in form.trip_picture.errors %}
+                            <span>{{ error }}</span><br>
+                        {% endfor %}
                     {% endif %}
                 </div>
             </fieldset>

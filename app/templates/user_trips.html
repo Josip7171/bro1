@@ -6,7 +6,7 @@
     <article>
         <a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}"><h2>Izlet u {{ trip.location }}</h2></a>
         <div>
-            <img src="{{ url_for('static', filename='profile_pics/' + trip.author.image_file) }}">
+            <img src="{{ url_for('static', filename='trip_pics/' + trip.image_file) }}">
             <p>Autor : <a href="{{ url_for('users.user_trips', id=trip.author.id) }}">{{ trip.author.username }}</a></p>
             <p>Datum stvarnja : {{ trip.date_created.strftime('%Y-%m-%d') }}</p>
             <p>Detalji :</p>

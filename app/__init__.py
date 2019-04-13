@@ -35,3 +35,10 @@ def create_app(config_class=Config):
     app.register_blueprint(errors)
 
     return app
+
+
+# stvaranje DB datoteke ako smo ju izbrisali:
+# U python konzoli unesti sljedece naredbe:
+#
+# from app import db, create_app
+# db.create_all(app=create_app())

@@ -6,6 +6,45 @@
             <fieldset>
                 <legend>Join Today</legend>
                 <div>
+                    {{ form.first_name.label }}
+                    {% if form.first_name.errors %}
+                        {{ form.first_name }}
+                        <div>
+                            {% for error in form.first_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.first_name }}
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.last_name.label }}
+                    {% if form.last_name.errors %}
+                        {{ form.last_name }}
+                        <div>
+                            {% for error in form.last_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.last_name }}
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.full_name.label }}
+                    {% if form.full_name.errors %}
+                        {{ form.full_name }}
+                        <div>
+                            {% for error in form.full_name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.full_name }}
+                    {% endif %}
+                </div>
+                <div>
                     {{ form.username.label }}
                     {% if form.username.errors %}
                         {{ form.username }}
@@ -29,6 +68,84 @@
                         </div>
                     {% else %}
                         {{ form.email }}
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.address.label }}
+                    {% if form.address.errors %}
+                        {{ form.address }}
+                        <div>
+                            {% for error in form.address.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.address }}
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.country.label }}
+                    {% if form.country.errors %}
+                        {{ form.country }}
+                        <div>
+                            {% for error in form.country.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.country }}
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.phone_number.label }}
+                    {% if form.phone_number.errors %}
+                        {{ form.phone_number }}
+                        <div>
+                            {% for error in form.phone_number.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.phone_number }}
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.gender.label }}
+                    {% if form.gender.errors %}
+                        {{ form.gender }}
+                        <div>
+                            {% for error in form.gender.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.gender }}
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.birth_date.label }}
+                    {% if form.birth_date.errors %}
+                        {{ form.birth_date }}
+                        <div>
+                            {% for error in form.birth_date.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.birth_date }}
+                    {% endif %}
+                </div>
+                <div>
+                    {{ form.about_me.label }}
+                    {% if form.about_me.errors %}
+                        {{ form.about_me }}
+                        <div>
+                            {% for error in form.about_me.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.about_me }}
                     {% endif %}
                 </div>
                 <div>

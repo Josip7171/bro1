@@ -1,70 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <style>
-    body {font-family: Arial, Helvetica, sans-serif;}
 
-    /* The Modal (background) */
-    .modal {
-      display: none; /* Hidden by default */
-      position: fixed; /* Stay in place */
-      z-index: 1; /* Sit on top */
-      padding-top: 100px; /* Location of the box */
-      left: 0;
-      top: 0;
-      width: 100%; /* Full width */
-      height: 100%; /* Full height */
-      overflow: auto; /* Enable scroll if needed */
-      background-color: rgb(0,0,0); /* Fallback color */
-      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    }
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+        <meta name="generator" content="Jekyll v3.8.5">
 
-    /* Modal Content */
-    .modal-content {
-      background-color: #fefefe;
-      margin: auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 50%;
-    }
+        {% if title %}
+            <title>TRIPPIN - {{ title }}</title>
+        {% else %}
+            <title>TRIPPIN</title>
+        {% endif %}
 
-    /* The Close Button */
-    .close {
-      color: #aaaaaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
+        <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/album/">
 
-    .close:hover,
-    .close:focus {
-      color: #000;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    </style>
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    {% if title %}
-        <title>TRIPPIN - {{ title }}</title>
-    {% else %}
-        <title>TRIPPIN</title>
-    {% endif %}
-</head>
-<body>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            /* The Modal (background) */
+            .modal {
+              display: none; /* Hidden by default */
+              position: fixed; /* Stay in place */
+              z-index: 1; /* Sit on top */
+              padding-top: 100px; /* Location of the box */
+              left: 0;
+              top: 0;
+              width: 100%; /* Full width */
+              height: 100%; /* Full height */
+              overflow: auto; /* Enable scroll if needed */
+              background-color: rgb(0,0,0); /* Fallback color */
+              background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            }
+
+            /* Modal Content */
+            .modal-content {
+              background-color: #ffffff;
+              margin: auto;
+              padding: 20px;
+              border: 1px solid #888;
+              width: 80%;
+            }
+
+            /* The Close Button */
+            .close {
+              color: #000000;
+              float: right;
+              font-size: 36px;
+              font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+              color: #000;
+              text-decoration: none;
+              cursor: pointer;
+            }
+        </style>
+
+        <style>
+          .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+          }
+
+          @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+              font-size: 3.5rem;
+            }
+          }
+        </style>
+        <!-- Custom styles for this template -->
+        <style>
+            .jumbotron {
+              padding-top: 3rem;
+              padding-bottom: 3rem;
+              margin-bottom: 0;
+              background-color: #fff;
+            }
+            @media (min-width: 768px) {
+              .jumbotron {
+                padding-top: 6rem;
+                padding-bottom: 6rem;
+              }
+            }
+
+            .jumbotron p:last-child {
+              margin-bottom: 0;
+            }
+
+            .jumbotron-heading {
+              font-weight: 300;
+            }
+
+            .jumbotron .container {
+              max-width: 40rem;
+            }
+
+            footer {
+              padding-top: 3rem;
+              padding-bottom: 3rem;
+            }
+
+            footer p {
+              margin-bottom: .25rem;
+            }
+        </style>
+    </head>
+
+    <body>
 
     <header>
-        <a href="{{ url_for('main.home') }}">Home</a>
-        <a href="{{ url_for('main.about') }}">About</a>
-        <a href="{{ url_for('users.travelers') }}">Travelers</a>
-        {% if current_user.is_authenticated %}
-        <a href="{{ url_for('trips.new_trip') }}">New Trip</a>
-        <a href="{{ url_for('users.account') }}">Account</a>
-        <a href="{{ url_for('users.logout') }}">Logout</a>
-        {% else %}
-        <a href="{{ url_for('users.register') }}">Register</a>
-        <a href="{{ url_for('users.login') }}">Login</a>
-        {% endif %}
+      <div class="collapse bg-dark" id="navbarHeader">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-8 col-md-7 py-4">
+              <h4 class="text-white">O nama</h4>
+              <p class="text-muted">Udruženje ljudi istomišljenika koji vole putovati i sami organizirati svoje izlete. Svaki korisnik ima mogučnost stvaranja izleta što znači da se ON brine o prijevozu i organizaciji isto tako se može priključiti nekom postojećem izletu ili ako se u međuvremenu predomislio, može se odjaviti!</p>
+            </div>
+            <div class="col-sm-4 offset-md-1 py-4">
+              <h4 class="text-white">Contact</h4>
+              <ul class="list-unstyled">
+                <li><a href="#" class="text-white">Follow on Twitter</a></li>
+                <li><a href="#" class="text-white">Like on Facebook</a></li>
+                <li><a href="#" class="text-white">Email us</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container d-flex justify-content-between">
+          <a href="{{ url_for('main.home') }}" class="navbar-brand d-flex align-items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="mr-2" viewBox="0 0 24 24" focusable="false"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            <strong>Izleti</strong>
+          </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+      </div>
     </header>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -77,9 +159,34 @@
         {% endif %}
     {% endwith %}
 
+
+
     {% block content %}
     {% endblock %}
 
+
+
+    <footer class="text-muted">
+      <div class="container">
+        <p class="float-right">
+          <a href="#">Na vrh</a>
+        </p>
+        <p>Album example is © Bootstrap, but please download and customize it for yourself!</p>
+      </div>
+    </footer>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 
 </body>
 </html>
