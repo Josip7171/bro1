@@ -152,7 +152,7 @@
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
-                <div>
+                <div class="alert alert-{{ category }}">
                     {{ message }}
                 </div>
             {% endfor %}
@@ -166,7 +166,7 @@
 
 
 
-    <footer class="text-muted">
+    <footer class="text-muted" style="background-color: whitesmoke">
       <div class="container">
         <p class="float-right">
           <a href="#">Na vrh</a>

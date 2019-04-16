@@ -57,6 +57,7 @@ class User(db.Model, UserMixin):
 
 class Trip(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), unique=True, nullable=False)
     location = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)

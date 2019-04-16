@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <!------ Include the above in your HEAD tag ---------->
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+        }
+
+
+
+        .main-head{
+            height: 150px;
+            background: #FFF;
+
+        }
+
+        .sidenav {
+            height: 100%;
+            background-color: #000;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+
+        .main {
+            padding: 0px 10px;
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {padding-top: 15px;}
+        }
+
+        @media screen and (max-width: 450px) {
+            .login-form{
+                margin-top: 10%;
+            }
+
+            .register-form{
+                margin-top: 10%;
+            }
+        }
+
+        @media screen and (min-width: 768px){
+            .main{
+                margin-left: 40%;
+            }
+
+            .sidenav{
+                width: 40%;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                left: 0;
+            }
+
+            .login-form{
+                margin-top: 80%;
+            }
+
+            .register-form{
+                margin-top: 20%;
+            }
+        }
+
+
+        .login-main-text{
+            margin-top: 20%;
+            padding: 60px;
+            color: #fff;
+        }
+
+        .login-main-text h2{
+            font-weight: 300;
+        }
+
+        .btn-black{
+            background-color: #000 !important;
+            color: #fff;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <div class="sidenav">
+         <div class="login-main-text">
+            <h2><a href="{{ url_for('main.home') }}">TrippinApp</a><br> Registration Page</h2>
+            <p>Login or register from here to access.</p>
+         </div>
+      </div>
+      <div class="main">
+         <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+               <form method="POST" action="" style="margin-top: 20px">
+               {{ form.hidden_tag() }}
+               <h2><b>Registracija</b></h2>
+                  <div class="form-group" style="margin-top: 20px">
+                        {% if form.first_name.errors %}
+                            {{ form.first_name(class="form-control", placeholder=form.first_name.description) }}
+                            <div>
+                                {% for error in form.first_name.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.first_name(class="form-control", placeholder=form.first_name.description) }}
+                        {% endif %}
+                  </div>
+                  <div class="form-group">
+                        {% if form.last_name.errors %}
+                            {{ form.last_name(class="form-control", placeholder=form.last_name.description) }}
+                            <div>
+                                {% for error in form.last_name.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.last_name(class="form-control", placeholder=form.last_name.description) }}
+                        {% endif %}
+                  </div>
+                   <div class="form-group">
+                        {% if form.full_name.errors %}
+                            {{ form.full_name(class="form-control", placeholder=form.full_name.description) }}
+                            <div>
+                                {% for error in form.full_name.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.full_name(class="form-control", placeholder=form.full_name.description) }}
+                        {% endif %}
+                  </div>
+                   <div class="form-group">
+                        {% if form.username.errors %}
+                            {{ form.username(class="form-control", placeholder=form.username.description) }}
+                            <div>
+                                {% for error in form.username.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.username(class="form-control", placeholder=form.username.description) }}
+                        {% endif %}
+                  </div>
+                   <div class="form-group">
+                        {% if form.email.errors %}
+                            {{ form.email(class="form-control", placeholder=form.email.description) }}
+                            <div>
+                                {% for error in form.email.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.email(class="form-control", placeholder=form.email.description) }}
+                        {% endif %}
+                  </div>
+                   <div class="form-group">
+                        {% if form.address.errors %}
+                            {{ form.address(class="form-control", placeholder=form.address.description) }}
+                            <div>
+                                {% for error in form.address.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.address(class="form-control", placeholder=form.address.description) }}
+                        {% endif %}
+                  </div>
+                   <div class="form-group">
+                        {% if form.country.errors %}
+                            {{ form.country(class="form-control", placeholder=form.country.description) }}
+                            <div>
+                                {% for error in form.country.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.country(class="form-control", placeholder=form.country.description) }}
+                        {% endif %}
+                  </div>
+                   <div class="form-group">
+                        {% if form.phone_number.errors %}
+                            {{ form.phone_number(class="form-control", placeholder=form.phone_number.description) }}
+                            <div>
+                                {% for error in form.phone_number.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.phone_number(class="form-control", placeholder=form.phone_number.description) }}
+                        {% endif %}
+                  </div>
+                   <div class="form-group">
+                        {% if form.gender.errors %}
+                            {{ form.gender }}
+                            <div>
+                                {% for error in form.gender.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.gender }}
+                        {% endif %}
+                  </div>
+                   <div class="form-group">
+                        {% if form.birth_date.errors %}
+                            {{ form.birth_date(class="form-control", placeholder=form.birth_date.description) }}
+                            <div>
+                                {% for error in form.birth_date.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.birth_date(class="form-control", placeholder=form.birth_date.description) }}
+                        {% endif %}
+                  </div>
+                   <div class="form-group">
+                        {% if form.about_me.errors %}
+                            {{ form.about_me(class="form-control", placeholder=form.about_me.description) }}
+                            <div>
+                                {% for error in form.about_me.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.about_me(class="form-control", placeholder=form.about_me.description) }}
+                        {% endif %}
+                  </div><div class="form-group">
+                        {% if form.password.errors %}
+                            {{ form.password(class="form-control", placeholder=form.password.description) }}
+                            <div>
+                                {% for error in form.password.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.password(class="form-control", placeholder=form.password.description) }}
+                        {% endif %}
+                  </div>
+                   <div class="form-group">
+                        {% if form.confirm_password.errors %}
+                            {{ form.confirm_password(class="form-control",
+                            placeholder=form.confirm_password.description) }}
+                            <div>
+                                {% for error in form.confirm_password.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.confirm_password(class="form-control",
+                            placeholder=form.confirm_password.description) }}
+                        {% endif %}
+                  </div>
+
+                  <div class="form-group" style="margin-top: 50px; margin-bottom: 250px">
+                      {{ form.submit(class="btn btn-secondary") }}
+                      <a href="{{url_for('users.login') }}" class="btn btn-black" role="button">Login</a>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+</body>
+</html>

@@ -19,8 +19,7 @@ def new_trip():
         picture_file = 'trip_default.jpg'
         if form.trip_picture.data:
             picture_file = save_picture_trip(form.trip_picture.data)
-            print("success")
-        trip = Trip(location=form.location.data, user_id=current_user.id, price=form.price.data,
+        trip = Trip(name=form.name.data, location=form.location.data, user_id=current_user.id, price=form.price.data,
                     people_number=form.people_number.data, starting_at=form.starting_at.data,
                     transport_type=form.transport_type.data, trip_duration=form.trip_duration.data,
                     details=form.details.data, image_file=picture_file)
@@ -43,7 +42,7 @@ def show_trip(trip_id):
     mydict = {}
     users = User.query.filter(User.trips_joined.any(id=trip_id)).all()
     mydict[trip_id] = [x.username for x in users]
-    return render_template('show_trip.html', title=selected_trip.location, trip=selected_trip, mydict=mydict,
+    return render_template('show_trip2.html', title=selected_trip.location, trip=selected_trip, mydict=mydict,
                            users=users)
 
 

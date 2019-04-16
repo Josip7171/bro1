@@ -39,7 +39,7 @@ def send_reset_email(user):
     msg = Message('Passsowrd Reset Request', sender='trippinapplication@gmail.com',
                   recipients=[user.email])
     msg.body = f'''To reset your password visit the folowing link:
-    {url_for('reset_token', token=token, _external=True)}
+    {url_for('users.reset_token', token=token, _external=True)}
 
 If you did not make this request than simply ignore this email and no changes will be made.
 

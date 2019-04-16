@@ -1,5 +1,24 @@
 {% extends "layout.html" %}
 {% block content %}
+
+    <img src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}">
+    <p>Ime: {{ user.full_name }}</p>
+    <p>aktivan: {{ user.active }}</p>
+    <p>Datum rođenja: {{ user.birth_date }}</p>
+    <div>
+        <p>Prijavljen na izlete:
+        {% for trip in user.trips_joined %}
+            {{ trip.location }},
+        {% endfor %}</p>
+    </div>
+
+    <p>O meni:</p>
+    <article>{{ user.about_me }}</article>
+    <hr>
+
+
+
+
 {% set iterated = {'i': False} %}
 <h1>Trips By {{ user.username }} ({{ trips.total }})</h1><hr>
     {% for trip in trips.items %}

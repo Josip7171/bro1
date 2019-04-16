@@ -45,14 +45,37 @@
 
                 <div class="col-md-4">
                   <div class="card mb-4 shadow-sm">
-                   <img alt="" src="{{ url_for('static', filename='trip_pics/' + trip.image_file) }}">
+                    <img alt="" src="{{ url_for('static', filename='trip_pics/' + trip.image_file) }}"
+                        class="img-fluid img-thumbnail" width="100%">
                     <div class="card-body">
-                        <h2><a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}"><h2>Izlet: {{ trip.location }}</h2></a></h2>
-                      <p class="card-text">Autor: <a href="{{ url_for('users.user_trips', id=trip.author.id) }}">{{ trip.author.username }}</a></p>
-                      <p class="card-text">Cijena: {{ trip.price }} kuna</p>
-                      <p class="card-text">Trajanje: {{ trip.trip_duration }} dana</p>
-                      <p class="card-text">Početak: {{ trip.starting_at }}</p>
-                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="card-text row justify-content-md-center">
+                            <h1>
+                            <a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}"
+                               class="badge badge-light">
+                                {{ trip.name }}
+                            </a>
+                        </h1>
+                        </div>
+                      <div class="card-text">
+                          Lokacija: {{ trip.location }}
+                      </div>
+                      <div class="card-text">
+                          Autor:
+                          <a href="{{ url_for('users.user_trips', id=trip.author.id) }}" class="badge badge-dark">
+                            {{ trip.author.username }}
+                          </a>
+                      </div>
+                      <div class="card-text">
+                          Cijena: {{ trip.price }} kuna
+                      </div>
+                      <div class="card-text">
+                          Trajanje: {{ trip.trip_duration }} dana
+                      </div>
+                      <div class="card-text">
+                          Početak: {{ trip.starting_at }}
+                      </div>
+
+                      <div class="d-flex justify-content-between align-items-center card-text ">
                         <div class="btn-group">
                             {% if current_user.is_authenticated %}
                                 {% if current_user.username == trip.author.username %}
@@ -98,10 +121,10 @@
                               </div>
 
                             </div>
-
-
                         </div>
-                        <small class="text-muted">{{ trip.date_created.strftime('%Y-%m-%d') }}</small>
+                      <div class="card-text">
+                            <small class="text-muted">{{ trip.date_created.strftime('%Y-%m-%d') }}</small>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -116,18 +139,25 @@
        </div>
     </main>
 
-    <small>Currently on {{ trips.page }}. page</small><br>
-    {% for page_num in trips.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-        {% if page_num %}
-            {% if trips.page == page_num %}
-                <a style="color:green" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
-            {% else %}
-                <a href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
-            {% endif %}
-        {% else %}
-        ...
-        {% endif %}
-    {% endfor %}
+    <!-- Tu staviti ovaj paginate u divove (column, row) da se nalazi na centru stranice -->
+    <div class="container">
+        <div class="row justify-content-md-center" style="margin-top: 50px;">
+            <div class="col-md-auto">
+                {% for page_num in trips.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                    {% if page_num %}
+                        {% if trips.page == page_num %}
+                            <a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+                        {% else %}
+                            <a class="btn btn-outline-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+                        {% endif %}
+                    {% else %}
+                    ...
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
 
 
 

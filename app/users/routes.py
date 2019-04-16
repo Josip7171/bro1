@@ -30,7 +30,7 @@ def register():
         return redirect(url_for('users.login'))
     else:
         flash('Account not created! Please check your input.', 'danger')
-    return render_template('register.html', title='Register', form=form)
+    return render_template('register2.html', title='Register', form=form)
 
 
 @users.route('/login', methods=['POST', 'GET'])
@@ -46,7 +46,7 @@ def login():
             return redirect(next_page) if next_page else redirect(url_for('main.home'))
         else:
             flash('Login Unsuccessful. Please check email and password.', 'danger')
-    return render_template('login.html', title='Login', form=form)
+    return render_template('login2.html', title='Login', form=form)
 
 
 @users.route('/logout')
@@ -61,7 +61,6 @@ def logout():
 def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
-        print("---------------------------ALOoo-------------", form.picture.data)
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
             current_user.image_file = picture_file
@@ -82,7 +81,7 @@ def account():
         form.phone_number.data = current_user.phone_number
         form.about_me.data = current_user.about_me
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
-    return render_template('account.html', form=form, image_file=image_file)
+    return render_template('account2.html', form=form, image_file=image_file)
 
 
 @users.route("/user/<int:id>", methods=["POST", "GET"])
