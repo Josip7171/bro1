@@ -89,7 +89,7 @@ def user_trips(id):
     page = request.args.get('page', 1, type=int)
     user = User.query.filter_by(id=id).first_or_404()
     trips = Trip.query.filter_by(user_id=id).order_by(Trip.date_created.desc()).paginate(page=page, per_page=2)
-    return render_template('user_trips.html', user=user, trips=trips)
+    return render_template('user_trips2.html', user=user, trips=trips)
 
 
 @users.route('/reset_password', methods=['POST', 'GET'])

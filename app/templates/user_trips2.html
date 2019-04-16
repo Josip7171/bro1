@@ -1,58 +1,198 @@
 {% extends "layout.html" %}
 {% block content %}
-{% set iterated = {'i': False} %}
-<h1>Trips By {{ trips.username }}, {{ trips.total }}</h1><hr>
 
-    {% for trip in trips.items %}
-    <article>
-        <h2>Izlet u {{ trip.location }}</h2>
+
+    <!-- Page Content -->
+  <div class="container">
+    <div class="row">
+      <!-- Post Content Column -->
+      <div class="col-lg-8">
+        <!-- Title -->
+        <h1 class="mt-4">{{ user.full_name }}</h1>
+        <!-- Author -->
+        <p class="lead">
+          {{ user.username }}
+        </p>
+        <hr>
+        <!-- Date/Time -->
+        <p>Pridružio se {{ user.date_joined.strftime('%d.%m.%Y') }} u {{ user.date_joined.strftime('%H:%M') }} sati.</p>
+        <hr>
+        <!-- Preview Image -->
+        <img class="img-fluid rounded" src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}" alt="">
+        <hr>
+        <p>aktivan: <b>{{ user.active }}</b></p>
+
+        <p>Datum rođenja : <b>{{ user.birth_date.strftime('%d.%m.%Y') }}</b></p>
         <div>
-            <img src="{{ url_for('static', filename='profile_pics/' + trip.users[0].image_file) }}">
-            <p>Autor : </p><a href="#">{{ trip.users[0].username }}</a>
-            <p>Datum stvarnja : {{ trip.date_created.strftime('%Y-%m-%d') }}</p>
-            <p>Vrsta transporta : {{ trip.transport }}</p>
-            <p>Slobodnih mjesta : {{ trip.spaces_available }}</p>
-            <p>Polazak (yy-mm-dd hh:mm:ss) : {{ trip.start_date }}</p>
-            <p>Cijena izleta (kuna) : {{ trip.price }}</p>
+            <p>Prijavljen na izlete:
+                <b>
+                    {% for trip in user.trips_joined %}
+                        <a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}"
+                           class="badge badge-light">
+                           {{ trip.name }}
+                        </a>,
+                    {% endfor %}
+                </b>
+            </p>
+        </div>
+        <p>O meni :</p>
+        <p><i>{{ user.about_me }}</i></p>
+        <br><br>
+      </div>
+      <div class="col-md-4">
 
-            <p>Trajanje izleta (dana) : {{ trip.trip_duration }}</p>
-            <p>Detalji :</p>
-            <article>{{ trip.details }}</article>
-            <br><br>
-            <p>Prijavljeni su : </p>
-            {% set iterated = {'i': False} %}
-            {% for user in trip.users %}
-               {% if user.username==current_user.username  %}
-                <div hidden>{{ iterated.update({'i':True}) }}</div>
+      </div>
+    </div>
+  </div>
+
+
+    {% set iterated = {'i': False} %}
+    {% set count = namespace(a=0) %}
+    {% set checker = namespace(a=0) %}
+    {%  set users_joined = {} %}
+
+
+    <main role="main">
+       <div class="album py-5 bg-light">
+          <div class="container">
+            <div class="row">
+
+
+                {% for trip in trips.items %}
+
+                {%  if trips.page == 0 %}
+                    {% set checker = namespace(a=0) %}
+                {% else %}
+                    {% set checker = namespace(a=1) %}
                 {% endif %}
-            <p>{{ user.username }}</p>
-            {% endfor %}
-            <br><br>
-            <hr>
-            <p>curent user{{current_user}}</p>
-            <p>user 0 {{trip.users[0]}}</p>
-            <hr>
-            {% if current_user.is_authenticated %}
-                {% if current_user == trip.users[0] %}
-                <p><i>Vi ste autor putovanja.</i></p>
-                <a href="{{ url_for('show_trip', trip=trip.id) }}">Izmjeni/izbrisi izlet</a>
 
-                {% elif not iterated.i %}
-                <a href="{{ url_for('add_traveler', trip=trip.id) }}">Prijavi se!</a>
-                {% elif  iterated.i %}
-                <p><i>Prijavljeni ste na ovaj izlet!</i><br>
-                    <a href="{{ url_for('remove_traveler', trip=trip.id) }}">Odjavi se</a></p>
-                {% endif %}
+                <div class="col-md-4">
+                  <div class="card mb-4 shadow-sm">
+                    <img alt="" src="{{ url_for('static', filename='trip_pics/' + trip.image_file) }}"
+                        class="img-fluid img-thumbnail" width="100%">
+                    <div class="card-body">
+                        <div class="card-text row justify-content-md-center">
+                            <h1>
+                            <a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}"
+                               class="badge badge-light">
+                                {{ trip.name }}
+                            </a>
+                        </h1>
+                        </div>
+                      <div class="card-text">
+                          Lokacija: {{ trip.location }}
+                      </div>
+                      <div class="card-text">
+                          Autor:
+                          <a href="{{ url_for('users.user_trips', id=trip.author.id) }}" class="badge badge-dark">
+                            {{ trip.author.username }}
+                          </a>
+                      </div>
+                      <div class="card-text">
+                          Cijena: {{ trip.price }} kuna
+                      </div>
+                      <div class="card-text">
+                          Trajanje: {{ trip.trip_duration }} dana
+                      </div>
+                      <div class="card-text">
+                          Početak: {{ trip.starting_at }}
+                      </div>
 
-            {% else %}
-                <small>Zelite se prijaviti na izlet? <a href="{{ url_for('login') }}">Login</a></small>
-            {% endif %}
-            <hr>
-            </div>
-        </article>
+                      <div class="d-flex justify-content-between align-items-center card-text ">
+                        <div class="btn-group">
+                            {% if current_user.is_authenticated %}
+                                {% if current_user.username == trip.author.username %}
+                                    <a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}" class="btn btn-primary my-2">Edit</a><br>
+                                {% endif %}
+
+                                {% set iterated = {'i': False} %}
+                                {% for trip_joined in current_user.trips_joined %}
+                                   {% if trip.id==trip_joined.id  %}
+                                     <div hidden>{{ iterated.update({'i':True}) }}</div>
+                                   {% endif %}
+                                {% endfor %}
+
+                                {% if not iterated.i %}
+                                    <a href="{{ url_for('users.add_traveler', trip_id=trip.id) }}" class="btn btn-primary my-2">Prijavi se</a>
+                                {% elif  iterated.i %}
+                                    <a href="{{ url_for('users.remove_traveler', trip_id=trip.id) }}" class="btn btn-warning my-2">Odjavi se</a>
+                                {% endif %}
+                            {% else %}
+                                <a href="{{ url_for('users.login') }}" class="btn btn-primary my-2">Login</a>
+                            {% endif %}
+
+                            {% set count = namespace(a=0) %}
+                            {% for user_joined in trip.users %}
+                                {% set count.a = count.a + 1 %}
+                            {% endfor %}
+
+                        </div>
+                      <div class="card-text">
+                            <small class="text-muted">{{ trip.date_created.strftime('%Y-%m-%d') }}</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
 
 
     {% endfor %}
+
+            </div>
+          </div>
+       </div>
+    </main>
+
+    <!-- Tu staviti ovaj paginate u divove (column, row) da se nalazi na centru stranice -->
+    <div class="container">
+        <div class="row justify-content-md-center" style="margin-top: 50px;">
+            <div class="col-md-auto">
+                {% for page_num in trips.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                    {% if page_num %}
+                        {% if trips.page == page_num %}
+                            <a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+                        {% else %}
+                            <a class="btn btn-outline-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+                        {% endif %}
+                    {% else %}
+                    ...
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        // Get the modal
+        var modal = document.getElementById('myModal');
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        function test1(trip_number, mydict) {
+          modal.style.display = "block";
+          document.getElementById("p1").innerText = mydict[trip_number + 1];
+          // document.getElementById("p2").innerText = trip_number;
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+    </script>
+
+
 
 {% endblock content %}
 
