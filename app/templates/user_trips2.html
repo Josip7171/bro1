@@ -1,7 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
 
-
     <!-- Page Content -->
   <div class="container">
     <div class="row">
@@ -15,7 +14,7 @@
         </p>
         <hr>
         <!-- Date/Time -->
-        <p>Pridružio se {{ user.date_joined.strftime('%d.%m.%Y') }} u {{ user.date_joined.strftime('%H:%M') }} sati.</p>
+        <p>Pridružio/la se {{ user.date_joined.strftime('%d.%m.%Y') }} u {{ user.date_joined.strftime('%H:%M') }} sati.</p>
         <hr>
         <!-- Preview Image -->
         <img class="img-fluid rounded" src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}" alt="">
@@ -24,7 +23,7 @@
 
         <p>Datum rođenja : <b>{{ user.birth_date.strftime('%d.%m.%Y') }}</b></p>
         <div>
-            <p>Prijavljen na izlete:
+            <p>Prijavljen/a na izlete:
                 <b>
                     {% for trip in user.trips_joined %}
                         <a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}"
@@ -48,6 +47,7 @@
 
     {% set iterated = {'i': False} %}
     {% set count = namespace(a=0) %}
+    {% set count2 = namespace(a=dict_length) %}
     {% set checker = namespace(a=0) %}
     {%  set users_joined = {} %}
 
@@ -58,13 +58,13 @@
             <div class="row">
 
 
-                {% for trip in trips.items %}
+    {% for trip in trips.items %}
 
-                {%  if trips.page == 0 %}
-                    {% set checker = namespace(a=0) %}
-                {% else %}
-                    {% set checker = namespace(a=1) %}
-                {% endif %}
+    {%  if trips.page == 0 %}
+        {% set checker = namespace(a=0) %}
+    {% else %}
+        {% set checker = namespace(a=1) %}
+    {% endif %}
 
                 <div class="col-md-4">
                   <div class="card mb-4 shadow-sm">
@@ -126,8 +126,26 @@
                                 {% set count.a = count.a + 1 %}
                             {% endfor %}
 
+{#                            <a id="myBtn" class="btn btn-info my-2" onclick="test1({{ count2.a - ((trips.page) * 5) }}, {{ mydict }})" role="button">{{ count.a }}</a>#}
+                            <a id="myBtn" class="btn btn-info my-2" onclick="test1({{ count2.a - checker.a - ((trips.page - 1) * 5) }}, {{ mydict }})" role="button">{{ count.a }} / {{ trip.people_number }}</a>
+
+                            <!-- The Modal -->
+                            <div id="myModal" class="modal">
+
+                              <!-- Modal content -->
+                              <div class="modal-content">
+                                <span class="close">&times;</span>
+                                  <hr>
+                                  <h3><b>Prijavljeni korisnici:</b></h3>
+                                  <br>
+                                <p id="p1">Some text in the Modal..</p>
+                                  <hr>
+{#                                <p id="p2">Some text in the Modal..</p>#}
+                              </div>
+
+                            </div>
                         </div>
-                      <div class="card-text">
+                        <div class="card-text">
                             <small class="text-muted">{{ trip.date_created.strftime('%Y-%m-%d') }}</small>
                         </div>
                       </div>
@@ -136,7 +154,7 @@
                 </div>
 
 
-
+        {% set count2.a = count2.a - 1 %}
     {% endfor %}
 
             </div>
@@ -191,7 +209,6 @@
           }
         }
     </script>
-
 
 
 {% endblock content %}

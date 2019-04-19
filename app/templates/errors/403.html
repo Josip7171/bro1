@@ -1,8 +1,27 @@
 {% extends "layout.html" %}
-
 {% block content %}
-    <div>
-        <h1>You dont have permision to do that (403)</h1>
-        <p>Please check your account and try again.</p>
+
+  <!-- Page Content -->
+  <div class="container">
+    <div class="row">
+      <!-- Post Content Column -->
+      <div class="col-lg-8">
+
+          <div class="form-group">
+               <form method="POST" action="" style="margin-top: 20px; margin-bottom: 53%" enctype="multipart/form-data">
+                  <h1><b>You dont have permision to do that (403)</b></h1>
+                   <div class="form-group">
+                        <p>Please check your account and try again.</p>
+                  </div>
+                 </form>
+            </div>
+
+      </div>
     </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container -->
+
+
+
 {% endblock content %}

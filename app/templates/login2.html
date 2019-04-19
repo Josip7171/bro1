@@ -97,6 +97,17 @@
          <div class="col-md-6 col-sm-12">
 {#            <div class="login-form">#}
               <div class="form-group">
+
+              {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
                <form method="POST" action="" style="margin-top: 225px">
                {{ form.hidden_tag() }}
                <h2><b>Prijava</b></h2>

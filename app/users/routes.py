@@ -24,12 +24,13 @@ def register():
                     address=form.address.data, country=form.country.data, phone_number=form.phone_number.data,
                     gender=form.gender.data, birth_date=form.birth_date.data, about_me=form.about_me.data,
                     password=hashed_password, )
-        db.session.add(user)
-        db.session.commit()
-        flash('Your account has been created. You can now login.', 'success')
-        return redirect(url_for('users.login'))
-    else:
-        flash('Account not created! Please check your input.', 'danger')
+        try:
+            db.session.add(user)
+            db.session.commit()
+            flash('Your account has been created. You can now login.', 'success')
+            return redirect(url_for('users.login'))
+        except:
+            flash('Account not created! Please check your input.', 'danger')
     return render_template('register2.html', title='Register', form=form)
 
 
@@ -53,6 +54,7 @@ def login():
 @login_required
 def logout():
     logout_user()
+    flash("Uspješno ste se odjavili!", "info")
     return redirect(url_for('main.home'))
 
 
@@ -81,15 +83,20 @@ def account():
         form.phone_number.data = current_user.phone_number
         form.about_me.data = current_user.about_me
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
-    return render_template('account2.html', form=form, image_file=image_file)
+    return render_template('account3.html', form=form, image_file=image_file)
 
 
 @users.route("/user/<int:id>", methods=["POST", "GET"])
 def user_trips(id):
     page = request.args.get('page', 1, type=int)
     user = User.query.filter_by(id=id).first_or_404()
-    trips = Trip.query.filter_by(user_id=id).order_by(Trip.date_created.desc()).paginate(page=page, per_page=2)
-    return render_template('user_trips2.html', user=user, trips=trips)
+    trips = Trip.query.filter_by(user_id=id).order_by(Trip.date_created.desc()).paginate(page=page, per_page=5)
+    trips2 = Trip.query.all()
+    mydict = {}
+    for i in range(len(trips2), 0, -1):
+        users = User.query.filter(User.trips_joined.any(id=i)).all()
+        mydict[i] = [x.username for x in users]
+    return render_template('user_trips2.html', user=user, trips=trips, mydict=mydict, dict_length=len(mydict))
 
 
 @users.route('/reset_password', methods=['POST', 'GET'])
@@ -136,7 +143,7 @@ def add_traveler(trip_id):
     current_user.trips_joined.append(selected_trip)
     db.session.add(current_user)
     db.session.commit()
-    flash(f'Prijavili ste se na putovanje! trip.id="{trip_id}"')
+    flash(f'Prijavili ste se na putovanje "{selected_trip.name}" !', "success")
     return redirect(url_for('main.home'))
 
 
@@ -147,7 +154,7 @@ def remove_traveler(trip_id):
     current_user.trips_joined.remove(selected_trip)
     db.session.add(current_user)
     db.session.commit()
-    flash(f'>Odjavili ste se sa putovanja! trip.id="{trip_id}"')
+    flash(f'>Odjavili ste se sa putovanja "{selected_trip.name}"!', "success")
     return redirect(url_for('main.home'))
 
 

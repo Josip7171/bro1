@@ -17,8 +17,9 @@
               {% if current_user.is_authenticated %}
               <p>
                   <a href="{{ url_for('trips.new_trip') }}" class="btn btn-primary my-2">Novi Izlet</a>
-                  <a href="{{ url_for('users.account') }}" class="btn btn-secondary my-2">Profile</a>
-                  <a href="{{ url_for('users.logout') }}" class="btn btn-secondary my-2">Logout</a>
+                  <a href="{{ url_for('users.user_trips', id=current_user.id) }}" class="btn btn-primary my-2">Moji Izleti</a>
+                  <a href="{{ url_for('users.account') }}" class="btn btn-secondary my-2">Izmjeni Račun</a>
+                  <a href="{{ url_for('users.logout') }}" class="btn btn-secondary my-2">Odjava</a>
               </p>
               {% else %}
               <p>
@@ -122,7 +123,7 @@
 
                             </div>
                         </div>
-                      <div class="card-text">
+                        <div class="card-text">
                             <small class="text-muted">{{ trip.date_created.strftime('%Y-%m-%d') }}</small>
                         </div>
                       </div>

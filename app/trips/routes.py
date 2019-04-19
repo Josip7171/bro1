@@ -24,26 +24,32 @@ def new_trip():
                     transport_type=form.transport_type.data, trip_duration=form.trip_duration.data,
                     details=form.details.data, image_file=picture_file)
 
-        db.session.add(trip)
-        db.session.commit()
+        try:
+            db.session.add(trip)
+            db.session.commit()
 
-        flash('Your post has been created!', 'success')
-        return redirect(url_for('main.home'))
+            flash('Your post has been created!', 'success')
+            return redirect(url_for('main.home'))
+        except:
+            flash("Greška prilikom stvaranja izleta. Provjerite Vaš unos. Za korisniču podršku nam se obratite "
+                  "na email -- trippinapplication@gmail.com -- .", "danger")
 
-    else:
-        flash('Trip not created! Please check your input.', 'danger')
-
-    return render_template('new_trip.html', form=form, title='New Trip')
+    return render_template('new_trip2.html', form=form, title='New Trip')
 
 
 @trips.route("/show_trip/<int:trip_id>")
 def show_trip(trip_id):
     selected_trip = Trip.query.get_or_404(trip_id)
-    mydict = {}
+
+    counter = 0
+    for user in selected_trip.users:
+        counter+=1                      # broj korisnika prijavljenih na izlet
+
     users = User.query.filter(User.trips_joined.any(id=trip_id)).all()
-    mydict[trip_id] = [x.username for x in users]
-    return render_template('show_trip2.html', title=selected_trip.location, trip=selected_trip, mydict=mydict,
-                           users=users)
+    mylist = [x.username for x in users]
+    print(mylist)
+    return render_template('show_trip2.html', title=selected_trip.location, trip=selected_trip,
+                           users=users, counter=counter, mylist=mylist)
 
 
 @trips.route("/update/<int:trip>", methods=["POST", "GET"])
@@ -63,7 +69,17 @@ def update_trip(trip):
 
         selected_trip.location = form.location.data
         selected_trip.price = form.price.data
-        selected_trip.people_number = form.people_number.data
+
+        counter=0
+        for user in selected_trip.users:
+            counter+=1
+        print(counter)
+
+        if selected_trip.people_number <= form.people_number.data:
+            selected_trip.people_number = form.people_number.data
+        else:
+            flash('Pogrešan unos! Broj prijavljenih korisnika: {}'.format(counter), 'danger')
+            return redirect(url_for('trips.update_trip', trip=selected_trip.id))
         selected_trip.starting_at = form.starting_at.data
         selected_trip.transport_type = form.transport_type.data
         selected_trip.trip_duration = form.trip_duration.data
@@ -75,6 +91,7 @@ def update_trip(trip):
         return redirect(url_for('main.home', trip=selected_trip.id))
 
     elif request.method == 'GET':
+        form.name.data = selected_trip.name
         form.location.data = selected_trip.location
         form.price.data = selected_trip.price
         form.people_number.data = selected_trip.people_number
@@ -83,7 +100,7 @@ def update_trip(trip):
         form.trip_duration.data = selected_trip.trip_duration
         form.details.data = selected_trip.details
 
-    return render_template('new_trip.html', title='Update Trip', form=form,
+    return render_template('new_trip2.html', title='Update Trip', form=form,
                            trip=selected_trip, legend='Update Trip')
 
 

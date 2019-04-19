@@ -91,6 +91,45 @@
         <p><i>{{ trip.details }}</i></p>
         <br><br>
 
+      <div class="btn-group">
+        {% if current_user.is_authenticated %}
+
+            {% set iterated = {'i': False} %}
+            {% for trip_joined in current_user.trips_joined %}
+               {% if trip.id==trip_joined.id  %}
+                 <div hidden>{{ iterated.update({'i':True}) }}</div>
+               {% endif %}
+            {% endfor %}
+
+            {% if not iterated.i %}
+                <a href="{{ url_for('users.add_traveler', trip_id=trip.id) }}" class="btn btn-primary my-2">Prijavi se</a>
+            {% elif  iterated.i %}
+                <a href="{{ url_for('users.remove_traveler', trip_id=trip.id) }}" class="btn btn-warning my-2">Odjavi se</a>
+            {% endif %}
+
+        {% else %}
+            <a href="{{ url_for('users.login') }}" class="btn btn-primary my-2">Login</a>
+        {% endif %}
+
+{#      <a id="myBtn" class="btn btn-info my-2" onclick="test1({{ count2.a - ((trips.page) * 5) }}, {{ mydict }})" role="button">{{ count.a }}</a>#}
+        <a id="myBtn2" class="btn btn-info my-2" onclick="test1(0, {{ mydict }})" role="button">{{ counter }} / {{ trip.people_number }}</a>
+        <!-- The Modal -->
+        <div id="myModal2" class="modal">
+
+          <!-- Modal content -->
+          <div class="modal-content">
+            <span class="close close2">&times;</span>
+              <hr>
+              <h3><b>Prijavljeni korisnici:</b></h3>
+              <br>
+            <p id="p1">{{ mylist }}</p>
+              <hr>
+{#                                <p id="p2">Some text in the Modal..</p>#}
+          </div>
+
+        </div>
+    </div>
+
 {#        <!-- Comments Form -->#}
 {#        <div class="card my-4">#}
 {#          <h5 class="card-header">Leave a Comment:</h5>#}
@@ -205,6 +244,32 @@
     <!-- /.row -->
   </div>
   <!-- /.container -->
+
+    <script>
+        // Get the modal
+        var modal2 = document.getElementById('myModal2');
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close2")[0];
+
+        function test1(trip_number, mydict) {
+          modal2.style.display = "block";
+          //document.getElementById("p1").innerText = mydict[0];
+          // document.getElementById("p2").innerText = trip_number;
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+          modal2.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal2) {
+            modal2.style.display = "none";
+          }
+        }
+    </script>
 
 
 
