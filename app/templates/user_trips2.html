@@ -1,6 +1,10 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 550d55760d613981b8488f376ddfe417d0cdd272
     <!-- Page Content -->
   <div class="container">
     <div class="row">
@@ -14,7 +18,11 @@
         </p>
         <hr>
         <!-- Date/Time -->
+<<<<<<< HEAD
         <p>Pridružio/la se {{ user.date_joined.strftime('%d.%m.%Y') }} u {{ user.date_joined.strftime('%H:%M') }} sati.</p>
+=======
+        <p>Pridružio se {{ user.date_joined.strftime('%d.%m.%Y') }} u {{ user.date_joined.strftime('%H:%M') }} sati.</p>
+>>>>>>> 550d55760d613981b8488f376ddfe417d0cdd272
         <hr>
         <!-- Preview Image -->
         <img class="img-fluid rounded" src="{{ url_for('static', filename='profile_pics/' + user.image_file) }}" alt="">
@@ -23,7 +31,11 @@
 
         <p>Datum rođenja : <b>{{ user.birth_date.strftime('%d.%m.%Y') }}</b></p>
         <div>
+<<<<<<< HEAD
             <p>Prijavljen/a na izlete:
+=======
+            <p>Prijavljen na izlete:
+>>>>>>> 550d55760d613981b8488f376ddfe417d0cdd272
                 <b>
                     {% for trip in user.trips_joined %}
                         <a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}"
@@ -47,7 +59,10 @@
 
     {% set iterated = {'i': False} %}
     {% set count = namespace(a=0) %}
+<<<<<<< HEAD
     {% set count2 = namespace(a=dict_length) %}
+=======
+>>>>>>> 550d55760d613981b8488f376ddfe417d0cdd272
     {% set checker = namespace(a=0) %}
     {%  set users_joined = {} %}
 
@@ -58,6 +73,7 @@
             <div class="row">
 
 
+<<<<<<< HEAD
     {% for trip in trips.items %}
 
     {%  if trips.page == 0 %}
@@ -65,6 +81,15 @@
     {% else %}
         {% set checker = namespace(a=1) %}
     {% endif %}
+=======
+                {% for trip in trips.items %}
+
+                {%  if trips.page == 0 %}
+                    {% set checker = namespace(a=0) %}
+                {% else %}
+                    {% set checker = namespace(a=1) %}
+                {% endif %}
+>>>>>>> 550d55760d613981b8488f376ddfe417d0cdd272
 
                 <div class="col-md-4">
                   <div class="card mb-4 shadow-sm">
@@ -125,6 +150,19 @@
                             {% for user_joined in trip.users %}
                                 {% set count.a = count.a + 1 %}
                             {% endfor %}
+<<<<<<< HEAD
+=======
+
+                        </div>
+                      <div class="card-text">
+                            <small class="text-muted">{{ trip.date_created.strftime('%Y-%m-%d') }}</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+>>>>>>> 550d55760d613981b8488f376ddfe417d0cdd272
 
 {#                            <a id="myBtn" class="btn btn-info my-2" onclick="test1({{ count2.a - ((trips.page) * 5) }}, {{ mydict }})" role="button">{{ count.a }}</a>#}
                             <a id="myBtn" class="btn btn-info my-2" onclick="test1({{ count2.a - checker.a - ((trips.page - 1) * 5) }}, {{ mydict }})" role="button">{{ count.a }} / {{ trip.people_number }}</a>
@@ -211,5 +249,9 @@
     </script>
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 550d55760d613981b8488f376ddfe417d0cdd272
 {% endblock content %}
 
