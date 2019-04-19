@@ -90,7 +90,6 @@ def account():
 def user_trips(id):
     page = request.args.get('page', 1, type=int)
     user = User.query.filter_by(id=id).first_or_404()
-<<<<<<< HEAD
     trips = Trip.query.filter_by(user_id=id).order_by(Trip.date_created.desc()).paginate(page=page, per_page=5)
     trips2 = Trip.query.all()
     mydict = {}
@@ -98,10 +97,6 @@ def user_trips(id):
         users = User.query.filter(User.trips_joined.any(id=i)).all()
         mydict[i] = [x.username for x in users]
     return render_template('user_trips2.html', user=user, trips=trips, mydict=mydict, dict_length=len(mydict))
-=======
-    trips = Trip.query.filter_by(user_id=id).order_by(Trip.date_created.desc()).paginate(page=page, per_page=2)
-    return render_template('user_trips2.html', user=user, trips=trips)
->>>>>>> 550d55760d613981b8488f376ddfe417d0cdd272
 
 
 @users.route('/reset_password', methods=['POST', 'GET'])
