@@ -1,15 +1,22 @@
-from flask import Blueprint
-from flask import render_template, url_for, flash, redirect, request
+from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask_login import login_user, current_user, logout_user, login_required
 
 from app import bcrypt, db
 from app.models import User, Trip
 from app.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
                              ResetPasswordForm, RequestResetForm)
-from app.users.utils import save_picture, send_reset_email
+from app.trips.forms import PasswordCheckForm
+from app.users.utils import save_picture, send_reset_email, registration_email
 
+import random, string
 
 users = Blueprint('users', __name__)
+
+
+def randomStringDigits(stringLength=6):
+    """Generate a random string of letters and digits """
+    lettersAndDigits = string.ascii_letters + string.digits
+    return ''.join(random.choice(lettersAndDigits) for i in range(stringLength))
 
 
 @users.route('/register', methods=['POST', 'GET'])
@@ -18,19 +25,23 @@ def register():
         return redirect(url_for('main.home'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        rand_password = randomStringDigits()
+        hashed_password = bcrypt.generate_password_hash(rand_password).decode('utf-8')
         user = User(first_name=form.first_name.data, last_name=form.last_name.data,
                     full_name=form.full_name.data,username=form.username.data, email=form.email.data,
                     address=form.address.data, country=form.country.data, phone_number=form.phone_number.data,
                     gender=form.gender.data, birth_date=form.birth_date.data, about_me=form.about_me.data,
-                    password=hashed_password, )
+                    password=hashed_password)
+
         try:
             db.session.add(user)
             db.session.commit()
-            flash('Your account has been created. You can now login.', 'success')
+            registration_email(user, rand_password)
+            flash(f'Račun stvoren! privremena lozinka je "{rand_password}".'
+                  f'Za novu lozinku provjerite email pretinac', 'success')
             return redirect(url_for('users.login'))
         except:
-            flash('Account not created! Please check your input.', 'danger')
+            flash('Račun nije stvoren. Provjerite Vaš unos.', 'danger')
     return render_template('register2.html', title='Register', form=form)
 
 
@@ -134,11 +145,24 @@ def reset_token(token):
 @login_required
 def add_traveler(trip_id):
     selected_trip = Trip.query.get_or_404(trip_id)
+
+    if selected_trip.is_private:
+        form = PasswordCheckForm()
+        if form.validate_on_submit():
+            if bcrypt.check_password_hash(selected_trip.trip_password, form.trip_password.data):
+                pass
+            else:
+                flash('Netočna lozinka.', 'danger')
+                return redirect(url_for("main.home"))
+
+        else:
+            return render_template("password_check.html", form=form, title="Provjera")
+
     count = 0
     for user in selected_trip.users:
         count+=1
     if count == selected_trip.people_number:
-        flash("Not enough space in trip! Try again later.")
+        flash("Izlet popunjen. Pokušajte ponovno kasnije", "info")
         return redirect(url_for('main.home'))
     current_user.trips_joined.append(selected_trip)
     db.session.add(current_user)
@@ -154,13 +178,7 @@ def remove_traveler(trip_id):
     current_user.trips_joined.remove(selected_trip)
     db.session.add(current_user)
     db.session.commit()
-    flash(f'>Odjavili ste se sa putovanja "{selected_trip.name}"!', "success")
+    flash(f'>Odjava sa "{selected_trip.name}" uspješna!', "success")
     return redirect(url_for('main.home'))
-
-
-@users.route('/travelers')
-def travelers():
-    users = User.query.all()
-    return render_template('travelers.html', users=users, title='Travelers')
 
 

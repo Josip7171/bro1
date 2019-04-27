@@ -19,9 +19,9 @@ class RegistrationForm(FlaskForm):
     gender = RadioField('Spol', choices=[('male', 'musko'), ('female', 'zensko')], description="Gender")
     birth_date = DateField('Birth date', format='%d-%m-%Y', description="Birth Date")
     about_me = TextAreaField('About me', validators=[Length(min=2, max=120)], description="About Me")
-    password = PasswordField('Password', validators=[DataRequired()], description="Password")
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')],
-                                     description="Confirm Password")
+    # password = PasswordField('Password', validators=[DataRequired()], description="Password")
+    # confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')],
+    #                                  description="Confirm Password")
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
@@ -81,5 +81,4 @@ class ResetPasswordForm(FlaskForm):
                                                                      EqualTo('password')],
                                      description="Confirm password")
     submit = SubmitField('Reset Password')
-
 

@@ -34,16 +34,63 @@ def save_picture_trip(form_picture):
     return picture_fn
 
 
+def registration_email(user, rand_password):
+    token = user.get_reset_token()
+    msg = Message('Registracija', sender='trippinapplication@gmail.com',
+                  recipients=[user.email])
+    msg.body = f'''Da biste izmjenili svoju lozinku kliknite na sljedeći link
+{url_for('users.reset_token', token=token, _external=True)}
+
+Trenutna lozinka je "{rand_password}"
+
+
+Ugodan ostatak dana želi Vam TrippinApp!
+    '''
+    mail.send(msg)
+
+
 def send_reset_email(user):
     token = user.get_reset_token()
-    msg = Message('Passsowrd Reset Request', sender='trippinapplication@gmail.com',
+    msg = Message('Resetiranje lozinke', sender='trippinapplication@gmail.com',
                   recipients=[user.email])
     msg.body = f'''To reset your password visit the folowing link:
-    {url_for('users.reset_token', token=token, _external=True)}
+{url_for('users.reset_token', token=token, _external=True)}
 
 If you did not make this request than simply ignore this email and no changes will be made.
 
     '''
     mail.send(msg)
 
+
+def send_nortification_mail_24(user):
+    msg = Message('Pocetak izleta za 24 sata!', sender='trippinapplication@gmail.com',
+                  recipients=[user.email])
+    msg.body = f'''Pozdrav "{ user.username }",
+Obavještavamo Vas da vrijeme polaska izleta na koji ste se prijavili je za točno 24 sata.
+    
+Ugodan ostatak dana želi vam TrippinApp!
+    '''
+    mail.send(msg)
+
+
+def send_nortification_mail_2(user):
+    msg = Message('Izlet: Polazak za 1 sat!', sender='trippinapplication@gmail.com',
+                  recipients=[user.email])
+    msg.body = f'''Pozdrav "{user.username}",
+Obavještavamo Vas da vrijeme polaska izleta na koji ste se prijavili je za točno 2 sata!
+
+Dobar provod na izletu želi vam TrippinApp!
+    '''
+    mail.send(msg)
+
+
+def trip_is_full(user):
+    msg = Message('Vaš izlet je popunjen!', sender='trippinapplication@gmail.com',
+                  recipients=[user.email])
+    msg.body = f'''Pozdrav "{user.username}",
+Obavještavamo Vas da je Vaš izlet popunjen!
+
+Ugodan ostatak dana želi vam TrippinApp!
+    '''
+    mail.send(msg)
 

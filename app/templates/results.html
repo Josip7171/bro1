@@ -1,0 +1,134 @@
+{% extends "layout4.html" %}
+{% block content %}
+
+    <div class="container">
+        <br><hr>
+        <h3>Rezultati pretraživanja: </h3>
+        <hr>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <br><p class="h5">
+                    Korisnici
+                </p>
+            </div>
+        </div>
+
+        {% for user in users %}
+            <div class="row">
+              <!-- Post Content Column -->
+              <div class="col-lg-8">
+                <p class="lead">
+                  <a href="{{ url_for('users.user_trips', id=user.id) }}">
+                      {{ user.username }}
+                  </a>
+                  ({{ user.full_name }})
+                </p>
+              </div>
+              <div class="col-md-4">
+
+              </div>
+            </div>
+        {% endfor %}
+        <br>
+        {% for user in users_name %}
+            <div class="row">
+              <!-- Post Content Column -->
+              <div class="col-lg-8">
+                <p class="lead">
+                  <a href="{{ url_for('users.user_trips', id=user.id) }}">{{ user.username }}</a> ({{ user.full_name }})
+                </p>
+              </div>
+              <div class="col-md-4">
+
+              </div>
+            </div>
+        {% endfor %}
+        {% for user in users_last_name %}
+            <div class="row">
+              <!-- Post Content Column -->
+              <div class="col-lg-8">
+                <p class="lead">
+                  <a href="{{ url_for('users.user_trips', id=user.id) }}">{{ user.username }}</a> ({{ user.full_name }})
+                </p>
+              </div>
+              <div class="col-md-4">
+
+              </div>
+            </div>
+        {% endfor %}
+        {% for user in users_full_name %}
+            <div class="row">
+              <!-- Post Content Column -->
+              <div class="col-lg-8">
+                <p class="lead">
+                  <a href="{{ url_for('users.user_trips', id=user.id) }}">{{ user.username }}</a> ({{ user.full_name }})
+                </p>
+              </div>
+              <div class="col-md-4">
+
+              </div>
+            </div>
+        {% endfor %}
+
+        <div class="row">
+            <div class="col-lg-8">
+                <br><p class="h5">
+                    Izleti
+                </p>
+            </div>
+        </div>
+
+        {% for trip in trips %}
+            <div class="row">
+              <div class="col-lg-8">
+                <p class="lead">
+                    <a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}" class="">
+                        {{ trip.name }}
+                    </a>
+                     ({{ trip.location }})
+                </p>
+              </div>
+              <div class="col-md-4">
+
+              </div>
+            </div>
+        {% endfor %}
+        <br>
+        {% for trip in trips_location %}
+            <div class="row">
+              <!-- Post Content Column -->
+              <div class="col-lg-8">
+                <p class="lead">
+                    <a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}" class="">
+                        {{ trip.name }}
+                    </a>
+                     ({{ trip.location }})
+                </p>
+              </div>
+              <div class="col-md-4">
+
+              </div>
+            </div>
+        {% endfor %}
+        {% for trip in trips_name %}
+            <div class="row">
+              <!-- Post Content Column -->
+              <div class="col-lg-8">
+                <p class="lead">
+                    <a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}" class="">
+                        {{ trip.name }}
+                    </a>
+                     ({{ trip.location }})
+                </p>
+              </div>
+              <div class="col-md-4">
+
+              </div>
+            </div>
+        {% endfor %}
+        <br>
+  </div>
+
+
+{% endblock content %}

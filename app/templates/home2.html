@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "layout4.html" %}
 {% block content %}
     {% set iterated = {'i': False} %}
     {% set count = namespace(a=0) %}
@@ -20,8 +20,8 @@
           </p>
           {% else %}
           <p>
-            <a href="{{ url_for('users.login') }}" class="btn btn-primary my-2">Login</a>
-            <a href="{{ url_for('users.register') }}" class="btn btn-secondary my-2">Register</a>
+            <a href="{{ url_for('users.login') }}" class="btn btn-primary my-2">Prijava</a>
+            <a href="{{ url_for('users.register') }}" class="btn btn-secondary my-2">Registracija</a>
           </p>
           {% endif %}
         </div>
@@ -44,6 +44,9 @@
                                 <a href="{{ url_for('trips.show_trip', trip_id=trip.id) }}"
                                    class="badge badge-light">
                                     {{ trip.name }}
+                                    {% if trip.is_private %}
+                                    <img alt="lock" src="{{ url_for('static', filename='helper_pics/' + 'small_lock.png') }}">
+                                    {% endif %}
                                 </a>
                             </h1>
                             </div>
@@ -53,7 +56,7 @@
                           <div class="card-text">
                               Autor:
                               <a href="{{ url_for('users.user_trips', id=trip.author.id) }}" class="badge badge-dark">
-                                <h7>{{ trip.author.username }}</h7>
+                                <div>{{ trip.author.username }}</div>
                               </a>
                           </div>
                           <div class="card-text">
@@ -95,7 +98,7 @@
                                 {% endfor %}
 
 <!-- 11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111  -->
-                                <a class="btn btn-info my-2" data-toggle="collapse" href="#a" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                <a class="btn btn-secondary my-2" data-toggle="collapse" href="#a" role="button" aria-expanded="false" aria-controls="collapseExample">
                                     {{ count.a }} / {{ trip.people_number }}
                                 </a>
 <!-- 11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111  -->

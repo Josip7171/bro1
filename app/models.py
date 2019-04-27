@@ -35,6 +35,7 @@ class User(db.Model, UserMixin):
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
     trips = db.relationship('Trip', backref='author', lazy=True)
+    comments = db.relationship('Comment', backref='comment_author', lazy=True)
     trips_joined = db.relationship('Trip', secondary=user_identifier, lazy='subquery',
                                    backref=db.backref('users', lazy=True))
 
@@ -55,6 +56,17 @@ class User(db.Model, UserMixin):
         return f"User('{self.username}', '{self.email}')"
 
 
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    trip_id = db.Column(db.Integer, db.ForeignKey('trip.id'), nullable=False)
+    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    content = db.Column(db.Text, nullable=False)
+
+    def __repr__(self):
+        return f"User('{self.comment_author}', '{self.date_created}')"
+
+
 class Trip(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
@@ -67,7 +79,11 @@ class Trip(db.Model):
     transport_type = db.Column(db.String(30), nullable=False)
     trip_duration = db.Column(db.Integer, nullable=False)
     details = db.Column(db.Text, nullable=False)
+    is_private = db.Column(db.Boolean, default=False)
+    trip_password = db.Column(db.String(60))
     image_file = db.Column(db.String(20), nullable=False, default='trip_default.jpg')
+    comments = db.relationship('Comment', cascade="all, delete-orphan", backref='commented_trip', lazy=True)
 
     def __repr__(self):
         return f"User('{self.author}', '{self.location}', '{self.date_created}')"
+

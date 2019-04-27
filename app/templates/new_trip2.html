@@ -10,7 +10,7 @@
       <div class="col-lg-8">
 
           <div class="form-group">
-               <form method="POST" action="" style="margin-top: 25px">
+               <form method="POST" action="" style="margin-top: 25px" name="f1">
                {{ form.hidden_tag() }}
                <h2><b>Novi Izlet</b></h2>
                   <div class="form-group" style="margin-top: 20px">
@@ -70,7 +70,7 @@
                             {% endfor %}
                         </div>
                         {% else %}
-                            {{ form.starting_at(class="form-control", placeholder=form.starting_at.description) }}
+                            {{ form.starting_at(class="form-control",placeholder=form.starting_at.description) }}
                         {% endif %}
                   </div>
                   <div class="form-group">
@@ -109,7 +109,7 @@
                             {{ form.details(class="form-control", placeholder=form.details.description) }}
                         {% endif %}
                   </div>
-                  <div class="form-group">
+                  <div class="form-group autoUpdate">
                         <div>
                             {{ form.trip_picture.label }}
                         </div>
@@ -120,13 +120,37 @@
                             {% endfor %}
                         {% endif %}
                   </div>
+
+{#               <form id="myForm">#}
+{#                    Checkbox 1: <input type="checkbox" name="checkbox1" id="checkboxOne" />#}
+{#                    <p><input type="text" id="emailAddr" name="myEmailAddr" placeholder="Email" disabled /></p>#}
+{##}
+{#                </form>#}
+
+
+                  <div class="form-check">
+                        {{ form.is_private(class="form-check-input") }}
+                        {{ form.is_private.label(class="form-check-label") }}
+                  </div>
+
+               <p id="id1">{{ form.is_private.data }}</p>
+
+
+                  <div class="form-group">
+                      {% if form.trip_password.errors %}
+                      {{ form.trip_password(class="form-control", placeholder=form.trip_password.description, disabled=True) }}
+                      <div>
+                          {% for error in form.trip_password.errors %}
+                              <span>{{ error }}</span>
+                          {% endfor %}
+                      </div>
+                      {% else %}
+                         {{ form.trip_password(class="form-control", placeholder=form.trip_password.description, disabled=True ) }}
+                      {% endif %}
+                  </div>
                   <div class="form-group" style="margin-top: 50px; margin-bottom: 250px">
                       {{ form.submit(class="btn btn-secondary") }}
-                      <a href="{{ url_for('users.register') }}" class="btn btn-black" role="button">Register</a>
                   </div>
-                  <small>
-                      <a href="{{ url_for('users.reset_request') }}">Forgot password?</a>
-                  </small>
                </form>
             </div>
 
@@ -135,6 +159,16 @@
     <!-- /.row -->
   </div>
   <!-- /.container -->
+    <script>
+        $(function() {
+            $('#checkboxOne, #checkboxTwo').click(function() {
+                var cb1 = $('#checkboxOne').is(':checked');
+                var cb2 = $('#checkboxTwo').is(':checked');
+                $('#tripPass').prop('disabled', !(cb1 || cb2));
+
+            });
+        });
+    </script>
 
 
 

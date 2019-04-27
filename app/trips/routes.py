@@ -1,11 +1,13 @@
 from flask import Blueprint
 from flask import render_template, url_for, flash, redirect, request, abort
 from flask_login import current_user, login_required
+from datetime import datetime, timedelta
 
-from app import db
-from app.models import Trip, User
+from app import db, bcrypt
+from app.models import Trip, User, Comment
 from app.trips.forms import CreateTripForm
 from app.users.utils import save_picture_trip
+from app.trips.forms import CommentTripForm
 
 trips = Blueprint('trips', __name__)
 
@@ -16,13 +18,28 @@ def new_trip():
     form = CreateTripForm()
 
     if form.validate_on_submit():
-        picture_file = 'trip_default.jpg'
-        if form.trip_picture.data:
-            picture_file = save_picture_trip(form.trip_picture.data)
-        trip = Trip(name=form.name.data, location=form.location.data, user_id=current_user.id, price=form.price.data,
-                    people_number=form.people_number.data, starting_at=form.starting_at.data,
-                    transport_type=form.transport_type.data, trip_duration=form.trip_duration.data,
-                    details=form.details.data, image_file=picture_file)
+        if form.starting_at.data < (datetime.today() + timedelta(days=3)):
+            flash('Izlet može početi najranije za 3 dana.', 'danger')
+            return redirect(url_for('trips.new_trip'))
+
+        if form.is_private.data:
+            hashed_password = bcrypt.generate_password_hash(form.trip_password.data).decode('utf-8')
+            picture_file = 'trip_default.jpg'
+            if form.trip_picture.data:
+                picture_file = save_picture_trip(form.trip_picture.data)
+            trip = Trip(name=form.name.data, location=form.location.data, user_id=current_user.id, price=form.price.data,
+                        people_number=form.people_number.data, starting_at=form.starting_at.data,
+                        transport_type=form.transport_type.data, trip_duration=form.trip_duration.data,
+                        is_private=form.is_private.data, trip_password=hashed_password,
+                        details=form.details.data, image_file=picture_file)
+        else:
+            picture_file = 'trip_default.jpg'
+            if form.trip_picture.data:
+                picture_file = save_picture_trip(form.trip_picture.data)
+            trip = Trip(name=form.name.data, location=form.location.data, user_id=current_user.id,
+                        price=form.price.data, people_number=form.people_number.data, starting_at=form.starting_at.data,
+                        transport_type=form.transport_type.data, trip_duration=form.trip_duration.data,
+                        is_private=form.is_private.data, details=form.details.data, image_file=picture_file)
 
         try:
             db.session.add(trip)
@@ -37,19 +54,33 @@ def new_trip():
     return render_template('new_trip2.html', form=form, title='New Trip')
 
 
-@trips.route("/show_trip/<int:trip_id>")
+@trips.route("/show_trip/<int:trip_id>", methods=['POST', 'GET'])
+@login_required
 def show_trip(trip_id):
     selected_trip = Trip.query.get_or_404(trip_id)
+    comments = Comment.query.order_by(Comment.date_created.desc()).filter_by(trip_id = selected_trip.id)
+    users = User.query.filter(User.trips_joined.any(id=trip_id)).all()
+
+    form = CommentTripForm()
+    if form.validate_on_submit():
+        comment = Comment(user_id=current_user.id, trip_id=trip_id, content=form.content.data)
+        try:
+            db.session.add(comment)
+            db.session.commit()
+
+            flash('Vaš komentar je uspješno objavljen!', 'success')
+            return redirect(url_for('trips.show_trip', trip_id=selected_trip.id))
+        except:
+            flash("Greška prilikom stvaranja komentara. Provjerite Vaš unos. Za korisniču podršku nam se obratite "
+                  "na email -- trippinapplication@gmail.com -- .", "danger")
+
 
     counter = 0
     for user in selected_trip.users:
         counter+=1                      # broj korisnika prijavljenih na izlet
 
-    users = User.query.filter(User.trips_joined.any(id=trip_id)).all()
-    mylist = [x.username for x in users]
-    print(mylist)
     return render_template('show_trip2.html', title=selected_trip.location, trip=selected_trip,
-                           users=users, counter=counter, mylist=mylist)
+                           users=users, counter=counter, form=form, comments=comments)
 
 
 @trips.route("/update/<int:trip>", methods=["POST", "GET"])
@@ -73,9 +104,8 @@ def update_trip(trip):
         counter=0
         for user in selected_trip.users:
             counter+=1
-        print(counter)
 
-        if selected_trip.people_number <= form.people_number.data:
+        if selected_trip.people_number <= form.people_number.data:      # nitko od prijavljenih ne smije izvisiti
             selected_trip.people_number = form.people_number.data
         else:
             flash('Pogrešan unos! Broj prijavljenih korisnika: {}'.format(counter), 'danger')

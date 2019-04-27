@@ -27,18 +27,15 @@ def create_app(config_class=Config):
     from app.users.routes import users
     from app.trips.routes import trips
     from app.main.routes import main
+    from app.comments.routes import comments
     from app.errors.handlers import errors
 
     app.register_blueprint(users)
     app.register_blueprint(trips)
     app.register_blueprint(main)
+    app.register_blueprint(comments)
     app.register_blueprint(errors)
 
     return app
 
 
-# stvaranje DB datoteke ako smo ju izbrisali:
-# U python konzoli unesti sljedece naredbe:
-#
-# from app import db, create_app
-# db.create_all(app=create_app())
