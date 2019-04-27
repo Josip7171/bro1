@@ -1,8 +1,10 @@
 from flask import render_template, request, Blueprint
 from sqlalchemy import func
+from datetime import datetime
 
 from app.models import Trip, User
 from app.main.forms import SearchForm
+from app.nortify_users import trip_start_check
 
 main = Blueprint('main', __name__)
 
@@ -11,9 +13,9 @@ main = Blueprint('main', __name__)
 def home():
     sForm = SearchForm()
 
-    # tu cu stavit sve mailove da se šalju!!!!
-    # napravit neku tablicu sa porukama koje ce se poslati sa statusom True/False da se ne salju vise puta
-    # i datum kad se salju, sadrzaj, kaj jos
+    now = datetime.now()
+    if now.hour == 0 or now.hour == 12:
+        trip_start_check()
 
     if sForm.validate_on_submit():
         if sForm.search.data:
@@ -38,5 +40,8 @@ def home():
     trips = Trip.query.order_by(Trip.date_created.desc()).paginate(page=page, per_page=per_page_val)
     users = User.query.all()
 
-    return render_template('home2.html', trips=trips, users=users, sForm=sForm)
+    ids = [("id"+ str(trip.id)) for trip in trips.items]
+    print(ids)
+
+    return render_template('home2.html', trips=trips, users=users, sForm=sForm, ids=ids)
 

@@ -6,5 +6,14 @@
       <auth-required>false</auth-required>
       <introspection-schemas>*:*</introspection-schemas>
     </data-source>
+    <data-source name="site.db" uuid="0e16d6c0-57a8-4415-849b-eb31c50be0d1">
+      <database-info product="SQLite" version="3.25.1" jdbc-version="2.1" driver-name="SQLite JDBC" driver-version="3.25.1" dbms="SQLITE" exact-version="3.25.1" exact-driver-version="3.25">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
+      <secret-storage>master_key</secret-storage>
+      <auth-required>false</auth-required>
+      <introspection-schemas>*:@</introspection-schemas>
+    </data-source>
   </component>
 </project>

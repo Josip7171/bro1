@@ -62,33 +62,22 @@ If you did not make this request than simply ignore this email and no changes wi
     mail.send(msg)
 
 
-def send_nortification_mail_24(user):
-    msg = Message('Pocetak izleta za 24 sata!', sender='trippinapplication@gmail.com',
+def send_nortification_mail_24(user, trip):
+    msg = Message('Pocetak izleta za manje od 24 sata!', sender='trippinapplication@gmail.com',
                   recipients=[user.email])
     msg.body = f'''Pozdrav "{ user.username }",
-Obavještavamo Vas da vrijeme polaska izleta na koji ste se prijavili je za točno 24 sata.
+Obavještavamo Vas da je vrijeme polaska izleta "{trip.name}" na koji ste se prijavili jako blizu!
     
 Ugodan ostatak dana želi vam TrippinApp!
     '''
     mail.send(msg)
 
 
-def send_nortification_mail_2(user):
-    msg = Message('Izlet: Polazak za 1 sat!', sender='trippinapplication@gmail.com',
-                  recipients=[user.email])
-    msg.body = f'''Pozdrav "{user.username}",
-Obavještavamo Vas da vrijeme polaska izleta na koji ste se prijavili je za točno 2 sata!
-
-Dobar provod na izletu želi vam TrippinApp!
-    '''
-    mail.send(msg)
-
-
-def trip_is_full(user):
+def trip_is_full(user, trip):
     msg = Message('Vaš izlet je popunjen!', sender='trippinapplication@gmail.com',
                   recipients=[user.email])
     msg.body = f'''Pozdrav "{user.username}",
-Obavještavamo Vas da je Vaš izlet popunjen!
+Obavještavamo Vas da je Vaš izlet "{trip.name}" popunjen!
 
 Ugodan ostatak dana želi vam TrippinApp!
     '''

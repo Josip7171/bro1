@@ -2,11 +2,11 @@ from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask_login import login_user, current_user, logout_user, login_required
 
 from app import bcrypt, db
-from app.models import User, Trip
+from app.models import User, Trip, Event
 from app.users.forms import (RegistrationForm, LoginForm, UpdateAccountForm,
                              ResetPasswordForm, RequestResetForm)
 from app.trips.forms import PasswordCheckForm
-from app.users.utils import save_picture, send_reset_email, registration_email
+from app.users.utils import save_picture, send_reset_email, registration_email, trip_is_full
 
 import random, string
 
@@ -165,6 +165,15 @@ def add_traveler(trip_id):
         flash("Izlet popunjen. Pokušajte ponovno kasnije", "info")
         return redirect(url_for('main.home'))
     current_user.trips_joined.append(selected_trip)
+    count+=1
+
+    if selected_trip.people_number == count:                    # posalji autoru mail da mu je izlet pun
+        event = Event.query.filter_by(name=selected_trip.name, event='is_full').first()
+        if event:
+            if event.executed == False:
+                trip_is_full(selected_trip.author, selected_trip)
+                event.executed = True                               # posalji tu poruku samo jednom...
+
     db.session.add(current_user)
     db.session.commit()
     flash(f'Prijavili ste se na putovanje "{selected_trip.name}" !', "success")

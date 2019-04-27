@@ -4,9 +4,9 @@ from flask_login import current_user, login_required
 from datetime import datetime, timedelta
 
 from app import db, bcrypt
-from app.models import Trip, User, Comment
+from app.models import Trip, User, Comment, Event
 from app.trips.forms import CreateTripForm
-from app.users.utils import save_picture_trip
+from app.users.utils import save_picture_trip, trip_is_full
 from app.trips.forms import CommentTripForm
 
 trips = Blueprint('trips', __name__)
@@ -45,7 +45,14 @@ def new_trip():
             db.session.add(trip)
             db.session.commit()
 
-            flash('Your post has been created!', 'success')
+            trip = Trip.query.filter_by(name=form.name.data).first()
+            event = Event(name=form.name.data, event="is_full", trip_id=trip.id)
+            event2 = Event(name=form.name.data, event="starting_soon", trip_id=trip.id)
+            db.session.add(event)
+            db.session.add(event2)
+            db.session.commit()
+
+            flash('Vaš izlet je uspješno stvoren!', 'success')
             return redirect(url_for('main.home'))
         except:
             flash("Greška prilikom stvaranja izleta. Provjerite Vaš unos. Za korisniču podršku nam se obratite "
@@ -115,6 +122,13 @@ def update_trip(trip):
         selected_trip.trip_duration = form.trip_duration.data
         selected_trip.details = form.details.data
 
+        if selected_trip.people_number == form.people_number.data:      #posalji autoru mail da mu je izlet pun
+            # event = Event.query.filter(Event.name==selected_trip.name.data, Event.event=="is_full")
+            event = Event.query.filter_by(name=selected_trip.name, event='is_full').first()
+            if event:
+                if event.executed == False:
+                    trip_is_full(selected_trip.author, selected_trip)
+                    event.executed = True                                   # posalji tu poruku samo jednom...
         db.session.commit()
 
         flash('Vas trip je ažuriran!')

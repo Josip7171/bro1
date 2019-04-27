@@ -2,6 +2,7 @@
 {% block content %}
     {% set iterated = {'i': False} %}
     {% set count = namespace(a=0) %}
+    {% set count2 = namespace(a=0) %}
 
     <section class="jumbotron text-center">
         <div class="container">
@@ -98,7 +99,7 @@
                                 {% endfor %}
 
 <!-- 11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111  -->
-                                <a class="btn btn-secondary my-2" data-toggle="collapse" href="#a" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                <a class="btn btn-secondary my-2" data-toggle="collapse" href="#{{ ids[count2.a] }}" role="button" aria-expanded="false" aria-controls="collapseExample">
                                     {{ count.a }} / {{ trip.people_number }}
                                 </a>
 <!-- 11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111  -->
@@ -111,7 +112,7 @@
                         </div>
 
 <!-- 22222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222  -->
-                          <div class="collapse" id="a">
+                          <div class="collapse" id="{{ ids[count2.a] }}">
                               <div class="card card-body">
                                   {% for user in trip.users %}
                                       <a href="{{ url_for('users.user_trips', id=user.id) }}"
@@ -125,7 +126,7 @@
 
                         </div>
                     </div>
-
+                {% set count2.a = count2.a + 1 %}
               {% endfor %}
 
             </div>

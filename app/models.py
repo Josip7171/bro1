@@ -83,7 +83,15 @@ class Trip(db.Model):
     trip_password = db.Column(db.String(60))
     image_file = db.Column(db.String(20), nullable=False, default='trip_default.jpg')
     comments = db.relationship('Comment', cascade="all, delete-orphan", backref='commented_trip', lazy=True)
+    events = db.relationship('Event', cascade="all, delete-orphan", backref='trip_event', lazy=True)
 
     def __repr__(self):
         return f"User('{self.author}', '{self.location}', '{self.date_created}')"
 
+
+class Event(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    event = db.Column(db.String, nullable=False)
+    executed = db.Column(db.Boolean, nullable=False, default=False)
+    trip_id = db.Column(db.Integer, db.ForeignKey('trip.id'), nullable=False)
