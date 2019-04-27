@@ -83,3 +83,13 @@ Ugodan ostatak dana želi vam TrippinApp!
     '''
     mail.send(msg)
 
+
+def trip_deleted(user, trip):
+    msg = Message('Izlet Obrisan!', sender='trippinapplication@gmail.com',
+                  recipients=[user.email])
+    msg.body = f'''Pozdrav "{user.username}",
+Obavještavamo Vas da je izlet "{trip.name}" na koji ste bili prijavljeni izbrisan.
+
+Ugodan ostatak dana želi vam TrippinApp!
+    '''
+    mail.send(msg)

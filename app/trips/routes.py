@@ -8,6 +8,7 @@ from app.models import Trip, User, Comment, Event
 from app.trips.forms import CreateTripForm
 from app.users.utils import save_picture_trip, trip_is_full
 from app.trips.forms import CommentTripForm
+from app.nortify_users import trip_deleted_nortify
 
 trips = Blueprint('trips', __name__)
 
@@ -48,8 +49,10 @@ def new_trip():
             trip = Trip.query.filter_by(name=form.name.data).first()
             event = Event(name=form.name.data, event="is_full", trip_id=trip.id)
             event2 = Event(name=form.name.data, event="starting_soon", trip_id=trip.id)
+            event3 = Event(name=form.name.data, event="trip_deleted", trip_id=trip.id)
             db.session.add(event)
             db.session.add(event2)
+            db.session.add(event3)
             db.session.commit()
 
             flash('Vaš izlet je uspješno stvoren!', 'success')
@@ -123,7 +126,6 @@ def update_trip(trip):
         selected_trip.details = form.details.data
 
         if selected_trip.people_number == form.people_number.data:      #posalji autoru mail da mu je izlet pun
-            # event = Event.query.filter(Event.name==selected_trip.name.data, Event.event=="is_full")
             event = Event.query.filter_by(name=selected_trip.name, event='is_full').first()
             if event:
                 if event.executed == False:
@@ -154,9 +156,10 @@ def delete_trip(trip):
     selected_trip = Trip.query.get_or_404(trip)
     if selected_trip.author != current_user:
         abort(403)
+    trip_deleted_nortify(trip)
     db.session.delete(selected_trip)
     db.session.commit()
-    flash(f'>Izbrisali ste vaš izlet!')
+    flash(f'>Izbrisali ste vaš izlet!', 'success')
     return redirect(url_for('main.home'))
 
 
