@@ -10,6 +10,7 @@ main = Blueprint('main', __name__)
 
 
 @main.route('/home2', methods=["GET", "POST"])
+@main.route('/', methods=["GET", "POST"])
 def home():
     sForm = SearchForm()
 
